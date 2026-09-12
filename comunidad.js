@@ -10,7 +10,7 @@ const STORE_NAME = 'publications';
 
 // Google Drive Bridge Webhook (Apps Script URL para tu cuenta Google 5TB Pro)
 // Pega aquí la URL de tu implementación web de Google Apps Script (terminada en /exec)
-const GOOGLE_DRIVE_BRIDGE_ENDPOINT = '';
+const GOOGLE_DRIVE_BRIDGE_ENDPOINT = 'https://script.google.com/macros/s/AKfycby14z64teU3o1V7FcRkgzHenQ3MfQP46Sj_fn4Lz0pbhPjjFPZe3fAuQYdW6glhvGnJ0Q/exec';
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
