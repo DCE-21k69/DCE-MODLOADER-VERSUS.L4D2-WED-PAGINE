@@ -4,25 +4,28 @@
  * Desarrollado por DCE STUDIOS | https://dcegaming.netlify.app/
  * ==============================================================================
  * 
- * INSTRUCCIONES DE DESPLIEGUE EN 30 SEGUNDOS:
- * 1. Entra a: https://script.google.com con tu cuenta de Google (la que tiene los 5TB Pro).
- * 2. Haz clic en "+ Nuevo proyecto".
- * 3. Borra el código existente y pega TODO este archivo.
- * 4. Haz clic en "Implementar" (arriba a la derecha) -> "Nueva implementación".
- * 5. En el engranaje "Seleccionar tipo", elige "Aplicación web".
- * 6. Configura:
- *    - Descripción: "DCE Community Drive Bridge"
- *    - Ejecutar como: "Yo (tu_correo@gmail.com)"
- *    - Quién tiene acceso: "Cualquier usuario" (Anyone)
- * 7. Haz clic en "Implementar" y autoriza los permisos de Drive cuando te lo pida.
- * 8. Copia la "URL de la aplicación web" (termina en /exec) y pégala en comunidad.js
- *    en la variable GOOGLE_DRIVE_BRIDGE_ENDPOINT.
+ * INSTRUCCIONES DE AUTORIZACIÓN Y DESPLIEGUE EN 30 SEGUNDOS:
+ * 1. Pega este código en https://script.google.com
+ * 2. En la barra superior, al lado de "Depurar", selecciona la función "testAuth"
+ *    y haz clic en "▶ Ejecutar" (Run).
+ * 3. Te saldrá una ventana de "Autorización obligatoria":
+ *    - Haz clic en "Revisar permisos".
+ *    - Elige tu cuenta de Google (coladvocesai@gmail.com).
+ *    - Haz clic en "Avanzado" -> "Ir a Proyecto (no seguro)" -> "Permitir".
+ * 4. ¡Listo! Con eso DriveApp ya tiene permiso total para crear archivos en tus carpetas.
  * ==============================================================================
  */
 
 // IDs de tus carpetas compartidas de Google Drive:
 const FOLDER_MODPACKS_ID = '1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu';
 const FOLDER_AUTOEXECS_ID = '1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB';
+
+// Función para autorizar DriveApp con un solo clic en "Ejecutar"
+function testAuth() {
+  const root = DriveApp.getRootFolder();
+  Logger.log("¡Permisos de Google Drive concedidos exitosamente a: " + root.getName() + "!");
+  return "OK";
+}
 
 function doPost(e) {
   try {
