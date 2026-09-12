@@ -2035,3 +2035,309 @@ a {
     gap: 10px;
   }
 }
+
+/* ==============================================================================
+   COMMUNITY HUB & RESOURCES (.DCEPACK & .CFG)
+   ============================================================================== */
+.community-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.community-highlight-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: var(--transition);
+}
+
+.community-highlight-box:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-highlight);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 106, 0, 0.12);
+}
+
+.comm-hl-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 106, 0, 0.12);
+  border: 1px solid rgba(255, 106, 0, 0.3);
+  color: var(--flame-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.comm-hl-body h4 {
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+  color: var(--text-main);
+  font-family: var(--font-heading);
+}
+
+.comm-hl-body p {
+  font-size: 0.86rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.community-sub-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.comm-sub-title-wrap {
+  max-width: 680px;
+}
+
+.comm-sub-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.comm-sub-heading {
+  font-size: 1.5rem;
+  font-family: var(--font-heading);
+  margin-bottom: 6px;
+}
+
+.comm-sub-text {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.btn-drive-upload {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.community-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.community-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.community-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-highlight);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 106, 0, 0.15);
+}
+
+.community-card-header {
+  margin-bottom: 14px;
+}
+
+.comm-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.comm-version-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--text-dim);
+}
+
+.comm-security-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #22c55e;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comm-card-title {
+  font-size: 1.15rem;
+  font-family: var(--font-heading);
+  margin-bottom: 4px;
+  color: var(--text-main);
+}
+
+.comm-card-author {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.comm-card-author strong {
+  color: var(--flame-orange);
+}
+
+.comm-card-desc {
+  font-size: 0.87rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 18px;
+  flex-grow: 1;
+}
+
+.comm-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 18px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.comm-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.comm-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-comm-download {
+  width: 100%;
+  justify-content: center;
+  font-size: 0.82rem;
+}
+
+/* Callout footer for community */
+.community-upload-callout {
+  margin-top: 56px;
+  background: linear-gradient(135deg, rgba(255, 106, 0, 0.08) 0%, rgba(10, 8, 7, 0.9) 100%);
+  border: 1px solid rgba(255, 106, 0, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 106, 0, 0.1);
+}
+
+.callout-content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  max-width: 650px;
+}
+
+.callout-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: rgba(255, 106, 0, 0.15);
+  border: 1px solid rgba(255, 106, 0, 0.4);
+  color: var(--flame-orange);
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.callout-text h3 {
+  font-size: 1.35rem;
+  font-family: var(--font-heading);
+  margin-bottom: 8px;
+}
+
+.callout-text p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.callout-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Responsive Breakpoints for Community Hub */
+@media (max-width: 1024px) {
+  .community-highlight-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .community-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .community-upload-callout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .callout-actions {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 768px) {
+  .community-sub-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .community-grid {
+    grid-template-columns: 1fr;
+  }
+  .callout-content {
+    flex-direction: column;
+  }
+  .callout-actions {
+    flex-direction: column;
+  }
+}
