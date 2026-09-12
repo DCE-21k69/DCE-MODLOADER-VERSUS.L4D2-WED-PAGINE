@@ -8,6 +8,23 @@ const DB_NAME = 'dce_community_hub_db';
 const DB_VERSION = 1;
 const STORE_NAME = 'publications';
 
+// Google Drive Bridge Webhook (Apps Script URL para tu cuenta Google 5TB Pro)
+// Pega aquí la URL de tu implementación web de Google Apps Script (terminada en /exec)
+const GOOGLE_DRIVE_BRIDGE_ENDPOINT = '';
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const res = reader.result;
+      const base64 = res.substring(res.indexOf(',') + 1);
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 let db = null;
 let currentTab = 'modpacks';
 let currentFilter = 'all';
@@ -499,10 +516,51 @@ async function handlePublishSubmit() {
   }
 
   const submitBtn = document.getElementById('btn-submit-publish');
-  if (submitBtn) submitBtn.disabled = true;
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando y Subiendo...';
+  }
 
   try {
     const pubId = 'dce_pub_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    let driveDownloadUrl = null;
+    let driveFileId = null;
+
+    // Subida automática a Google Drive Bridge si el endpoint está configurado
+    if (GOOGLE_DRIVE_BRIDGE_ENDPOINT && GOOGLE_DRIVE_BRIDGE_ENDPOINT.startsWith('http')) {
+      try {
+        const base64Data = await fileToBase64(selectedFile);
+        const payload = {
+          type: type,
+          fileName: selectedFile.name,
+          fileData: base64Data,
+          mimeType: selectedFile.type || 'application/octet-stream',
+          title: title,
+          version: version,
+          category: category,
+          description: description,
+          authorName: user.name,
+          authorSteamId: user.steamId,
+          authorSteamUrl: user.profileUrl,
+          authorAvatar: user.avatar
+        };
+
+        const resp = await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const driveRes = await resp.json();
+        if (driveRes && driveRes.status === 'success') {
+          driveDownloadUrl = driveRes.directDownloadUrl;
+          driveFileId = driveRes.fileId;
+          console.log('[DCE Drive Bridge] Subido con éxito a Google Drive:', driveRes);
+        }
+      } catch (uploadErr) {
+        console.warn('[DCE Drive Bridge] Conexión con Apps Script no disponible, respaldado localmente:', uploadErr);
+      }
+    }
+
     const item = {
       id: pubId,
       type: type, // 'modpack' | 'autoexec'
@@ -517,18 +575,24 @@ async function handlePublishSubmit() {
       fileName: selectedFile.name,
       fileSize: selectedFile.size,
       fileBlob: selectedFile,
+      driveDownloadUrl: driveDownloadUrl,
+      driveFileId: driveFileId,
       createdAt: new Date().toISOString()
     };
 
     await dbSavePublication(item);
     closePublishModal();
-    showCommToast(`🎉 ¡${item.title} publicado con éxito en la comunidad!`, 'ok');
+    const driveNote = driveDownloadUrl ? ' (Sincronizado en tu Google Drive)' : '';
+    showCommToast(`🎉 ¡${item.title} publicado con éxito en la comunidad!${driveNote}`, 'ok');
     await refreshView();
   } catch (ex) {
     console.error('Error al guardar publicación:', ex);
     showCommToast('Error al procesar el archivo. Revisa los permisos del navegador.', 'err');
   } finally {
-    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Publicar en la Comunidad';
+    }
   }
 }
 
@@ -694,25 +758,39 @@ function renderGrid(items) {
 }
 
 function triggerFileDownload(item) {
-  if (!item.fileBlob) {
-    showCommToast('Error: archivo no disponible para descarga.', 'err');
-    return;
-  }
-
-  try {
-    const url = URL.createObjectURL(item.fileBlob);
+  // 1. Descarga directa desde Google Drive si existe URL directa
+  if (item.driveDownloadUrl) {
     const a = document.createElement('a');
-    a.href = url;
+    a.href = item.driveDownloadUrl;
     a.download = item.fileName || (item.title + (item.type === 'modpack' ? '.dcepack' : '.cfg'));
+    a.target = '_blank';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-    showCommToast(`📥 Descargando "${item.fileName}"...`, 'ok');
-  } catch (ex) {
-    console.error('Error al iniciar descarga:', ex);
-    showCommToast('No se pudo iniciar la descarga en el navegador.', 'err');
+    showCommToast(`📥 Descarga directa de "${item.fileName}" iniciada...`, 'ok');
+    return;
   }
+
+  // 2. Fallback: descarga desde blob en almacenamiento local IndexedDB
+  if (item.fileBlob) {
+    try {
+      const url = URL.createObjectURL(item.fileBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item.fileName || (item.title + (item.type === 'modpack' ? '.dcepack' : '.cfg'));
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      showCommToast(`📥 Descargando "${item.fileName}"...`, 'ok');
+    } catch (ex) {
+      console.error('Error al iniciar descarga:', ex);
+      showCommToast('No se pudo iniciar la descarga en el navegador.', 'err');
+    }
+    return;
+  }
+
+  showCommToast('Error: archivo no disponible para descarga.', 'err');
 }
 
 /* ==============================================================================
