@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DCE MODS LOADER [Versus Suite] — Left 4 Dead 2 | DCE STUDIOS</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="DCE Mods Loader es la suite definitiva para activar cualquier mod de Steam Workshop en Left 4 Dead 2 Versus sin baneo VAC. Descargas para Windows, Linux y Steam Deck." />
+  <meta name="keywords" content="Left 4 Dead 2, L4D2, Versus Mods, Steam Workshop Versus, DCE Studios, Mod Loader, VAC Safe, Zero Copy, Flatpak, Steam Deck" />
+  <meta name="author" content="DCE STUDIOS" />
+  <meta property="og:title" content="DCE MODS LOADER — Versus Suite (Left 4 Dead 2)" />
+  <meta property="og:description" content="Activa skins, armas, personajes y sonidos en modo Versus oficial sin restricciones de consistencia y 100% seguro contra VAC." />
+  <meta property="og:image" content="dcemod.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dcegaming.netlify.app/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="icono.png" />
+
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Animated Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Glow Lighting -->
+  <div class="ambient-light ambient-1"></div>
+  <div class="ambient-light ambient-2"></div>
+  <div class="ambient-light ambient-3"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast">Mensaje</div>
+
+  <div class="site-wrapper">
+
+    <!-- ==============================================================================
+         NAVBAR
+         ============================================================================== -->
+    <header class="navbar" id="navbar">
+      <div class="container">
+        <a href="#hero" class="nav-brand">
+          <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+          <span>DCE MODS LOADER<span class="nav-tag-versus">VERSUS</span></span>
+        </a>
+
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#hero" class="nav-link active">Inicio</a></li>
+          <li><a href="#caracteristicas" class="nav-link">Características</a></li>
+          <li><a href="#guia" class="nav-link">Guía Paso a Paso</a></li>
+          <li><a href="#comparativa" class="nav-link">Comparativa</a></li>
+          <li><a href="#descargas" class="nav-link">Descargas</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            <i class="fab fa-github"></i> <span>GitHub</span>
+          </a>
+          <a href="#descargas" class="btn btn-primary btn-sm">
+            <i class="fas fa-download"></i> <span>Descargar v1.0.9</span>
+          </a>
+          <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==============================================================================
+         HERO SECTION
+         ============================================================================== -->
+    <section class="hero-section" id="hero">
+      <div class="container">
+        <div class="hero-content">
+          
+          <div class="badge badge-flame hero-badge">
+            <span class="badge-pulse"></span>
+            <span>Versión 1.0.9 Oficial • 100% VAC Safe • Zero-Copy</span>
+          </div>
+
+          <h1 class="hero-title">
+            Juega con tus Mods en <br />
+            <span class="text-gradient">Versus Oficial</span> sin Bloqueos
+          </h1>
+
+          <p class="hero-subtitle">
+            La suite definitiva y ultra-rápida para <strong>Left 4 Dead 2</strong> que te permite usar cualquier addon de la Steam Workshop en modo Versus saltándote el bloqueo de consistencia sin modificar ejecutables y con <strong>cero riesgo de baneo</strong>.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases/download/v1.0.9/DCE_Mod_Loader_L4D2.exe" class="btn btn-primary btn-lg">
+              <i class="fab fa-windows btn-icon"></i>
+              <span>Descargar para Windows (.exe)</span>
+            </a>
+
+            <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases/download/v1.0.9/DCE_Mods_Loader.flatpak" class="btn btn-secondary btn-lg">
+              <i class="fab fa-linux btn-icon"></i>
+              <span>Descargar para Linux / Steam Deck (.flatpak)</span>
+            </a>
+
+            <a href="https://dcegaming.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
+              <i class="fas fa-globe btn-icon"></i>
+              <span>Web Oficial DCE Studios</span>
+            </a>
+          </div>
+
+          <div class="hero-trust-bar">
+            <div class="trust-item">
+              <i class="fas fa-shield-halved"></i>
+              <span>100% Seguro contra VAC</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-bolt"></i>
+              <span>Montaje Zero-Copy (<0.05s)</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-hard-drive"></i>
+              <span>0 MB Espacio Extra en Disco</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-gamepad"></i>
+              <span>Soporte Nativo Steam Deck</span>
+            </div>
+          </div>
+
+          <!-- Showcase 3D Window Preview -->
+          <div class="showcase-wrapper">
+            <div class="showcase-window" id="showcase-window">
+              <div class="showcase-titlebar">
+                <div class="showcase-controls">
+                  <div class="showcase-dot dot-red"></div>
+                  <div class="showcase-dot dot-yellow"></div>
+                  <div class="showcase-dot dot-green"></div>
+                </div>
+                <div class="showcase-title">
+                  <i class="fas fa-fire" style="color: var(--flame-orange);"></i>
+                  <span>DCE MODS LOADER [VERSUS] — Interfaz Oficial</span>
+                </div>
+                <div style="width: 48px;"></div>
+              </div>
+
+              <div class="showcase-img-container">
+                <img src="dcemod.png" alt="DCE Mods Loader Interfaz" class="showcase-img" />
+              </div>
+            </div>
+
+            <!-- Floating Chips -->
+            <div class="floating-chip floating-chip-1">
+              <i class="fas fa-microchip" style="color: var(--flame-gold);"></i>
+              <span>Motor Zero-Copy Hardlinks & Symlinks</span>
+            </div>
+
+            <div class="floating-chip floating-chip-2">
+              <i class="fas fa-box-archive" style="color: var(--flame-orange);"></i>
+              <span>Modpacks Persistentes Autónomos (dce_storage)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         FEATURES SECTION (BENTO GRID)
+         ============================================================================== -->
+    <section class="section" id="caracteristicas">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-tag">Tecnología de Vanguardia</span>
+          <h2 class="section-title">Diseñado para la <span class="text-gradient">Máxima Eficiencia</span></h2>
+          <p class="section-desc">
+            Olvídate de comandos complejos, de esperar descargas repetidas o de sufrir duplicaciones de gigabytes en tu disco duro.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          
+          <!-- Card 1: Zero-Copy Engine -->
+          <div class="feature-card span-2">
+            <div class="feature-icon-box">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <h3 class="feature-title">Montaje Instantáneo Zero-Copy</h3>
+            <p class="feature-desc">
+              Utiliza enlaces simbólicos en Linux y enlaces duros (hardlinks) en Windows para inyectar tus addons directamente en la ruta de búsqueda del motor Source (<code>gameinfo.txt</code>). Habilitar 50 mods pesados toma <strong>menos de 0.05 segundos</strong> y ocupa exactamente <strong>0 MB adicionales</strong> en tu disco.
+            </p>
+            <span class="feature-tag">Velocidad Ultrarrápida</span>
+          </div>
+
+          <!-- Card 2: Modpacks Persistentes -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <i class="fas fa-box-archive"></i>
+            </div>
+            <h3 class="feature-title">Modpacks Persistentes</h3>
+            <p class="feature-desc">
+              ¿Te desuscribiste de un mod en Steam Workshop? ¡No importa! Al hacer tu modpack persistente, los complementos quedan respaldados en tu almacén local autónomo (<code>dce_storage/</code>), funcionando en Versus aunque Steam los borre de tu catálogo.
+            </p>
+            <span class="feature-tag">Autonomía Total</span>
+          </div>
+
+          <!-- Card 3: VPK Conflict Detector -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="feature-title">Detector de Conflictos VPK</h3>
+            <p class="feature-desc">
+              Analiza los archivos binarios internos de cada mod activo y te avisa al instante si dos modelos, sonidos o texturas chocan entre sí (por ejemplo, dos skins reemplazando el mismo fusil AK-47).
+            </p>
+            <span class="feature-tag">Diagnóstico Inteligente</span>
+          </div>
+
+          <!-- Card 4: Single Instance Security -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h3 class="feature-title">Seguridad de Instancia Única</h3>
+            <p class="feature-desc">
+              Protegido mediante <strong>Mutex</strong> de Windows y <strong>fcntl.flock</strong> a nivel de kernel de Linux. Si haces doble clic por error mientras la app está abierta o iniciando, el segundo proceso se cierra al instante y trae la ventana activa al frente con foco automático.
+            </p>
+            <span class="feature-tag">Anti-Duplicados</span>
+          </div>
+
+          <!-- Card 5: System Tray Minimizer -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <i class="fas fa-window-minimize"></i>
+            </div>
+            <h3 class="feature-title">Bandeja del Sistema Silenciosa</h3>
+            <p class="feature-desc">
+              Al hacer clic en JUGAR, la ventana se minimiza automáticamente al área de notificaciones (System Tray en Windows y StatusNotifierItem en Linux KDE Plasma). No consume recursos mientras juegas y te permite restaurar la app con 1 clic.
+            </p>
+            <span class="feature-tag">Segundo Plano Ligero</span>
+          </div>
+
+          <!-- Card 6: Visual Customization -->
+          <div class="feature-card span-2">
+            <div class="feature-icon-box">
+              <i class="fas fa-palette"></i>
+            </div>
+            <h3 class="feature-title">Personalización Visual Completa</h3>
+            <p class="feature-desc">
+              Elige entre 3 temas oficiales: <em>Fuego y Oro (Oscuro)</em>, <em>Oro Fundido (Obsidiana)</em> y <em>Luz Solar (Modo Claro de Alto Contraste)</em>. Soporta fondos de pantalla personalizados con control de opacidad, partículas animadas de brasas flotantes y selector bilingüe (Español e Inglés).
+            </p>
+            <span class="feature-tag">Estilo DCE Studios</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         STEP-BY-STEP INTERACTIVE GUIDE
+         ============================================================================== -->
+    <section class="section" id="guia">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-tag">Aprende a Usar la App</span>
+          <h2 class="section-title">Guía de Uso <span class="text-gradient">Paso a Paso</span></h2>
+          <p class="section-desc">
+            Instrucciones claras y detalladas para sacarle el 100% de provecho a DCE Mods Loader en cualquier sistema operativo.
+          </p>
+        </div>
+
+        <div class="guide-container">
+          
+          <!-- Guide Tab Buttons -->
+          <div class="guide-tabs">
+            <button class="guide-tab-btn active" data-target="guide-windows">
+              <i class="fab fa-windows"></i>
+              <span>1. Windows (.exe)</span>
+            </button>
+            <button class="guide-tab-btn" data-target="guide-linux">
+              <i class="fab fa-linux"></i>
+              <span>2. Linux / Steam Deck</span>
+            </button>
+            <button class="guide-tab-btn" data-target="guide-modpacks">
+              <i class="fas fa-boxes-stacked"></i>
+              <span>3. Crear Modpacks</span>
+            </button>
+            <button class="guide-tab-btn" data-target="guide-persistent">
+              <i class="fas fa-shield-virus"></i>
+              <span>4. Modo Persistente</span>
+            </button>
+            <button class="guide-tab-btn" data-target="guide-shortcuts">
+              <i class="fas fa-bolt"></i>
+              <span>5. Accesos Directos</span>
+            </button>
+          </div>
+
+          <!-- Tab 1: Windows -->
+          <div class="guide-content-panel active" id="guide-windows">
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                  <h4>Descarga el Ejecutable Portable</h4>
+                  <p>Descarga <code>DCE_Mod_Loader_L4D2.exe</code> desde la sección de descargas. No requiere instalador ni librerías adicionales: puedes guardarlo directamente en tu Escritorio o en tu carpeta de juegos.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                  <h4>Detección Automática de Left 4 Dead 2</h4>
+                  <p>Al abrir la aplicación, detectará automáticamente la ruta de tu Steam y Left 4 Dead 2, cargando todas las carpetas de Workshop y addons suscritos con sus portadas y descripciones.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                  <h4>Selecciona tus Mods y Haz Clic en JUGAR</h4>
+                  <p>Marca las casillas de los complementos que deseas usar en Versus (armas, skins, sonidos, scripts) y presiona el botón naranja <strong>JUGAR</strong>. En menos de 0.05 segundos quedarán inyectados y Left 4 Dead 2 se iniciará automáticamente.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Linux / Steam Deck -->
+          <div class="guide-content-panel" id="guide-linux">
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                  <h4>Descarga el Paquete Flatpak</h4>
+                  <p>Descarga el archivo autónomo <code>DCE_Mods_Loader.flatpak</code>. En Steam Deck o distribuciones Linux (KDE Discover / GNOME Software), puedes hacer doble clic sobre el archivo para instalarlo con un solo clic.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                  <h4>Instalación Rápida por Terminal (Opcional)</h4>
+                  <p>También puedes abrir tu consola y ejecutar el siguiente comando seguro para instalarlo a nivel de usuario sin necesidad de permisos root:</p>
+                  <div class="code-box">
+                    <code>flatpak install --user DCE_Mods_Loader.flatpak</code>
+                    <button class="copy-btn" data-clipboard="flatpak install --user DCE_Mods_Loader.flatpak">
+                      <i class="far fa-copy"></i> Copiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                  <h4>Soporte Automático para MicroSD en Steam Deck</h4>
+                  <p>El cargador busca automáticamente tu juego tanto en el almacenamiento interno (SSD) como en tarjetas MicroSD montadas en <code>/run/media/</code>. Si juegas en Modo Juego (Gaming Mode), puedes añadir la app como juego de no-Steam desde el modo escritorio.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Modpacks -->
+          <div class="guide-content-panel" id="guide-modpacks">
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                  <h4>Crea Colecciones Temáticas con el Asistente</h4>
+                  <p>Ve a la pestaña <strong>Modpacks</strong> y haz clic en <em>"Crear Modpack"</em>. Sigue el asistente paso a paso: asígnale un nombre, elige un icono o imagen de fondo personalizada y selecciona los mods que lo compondrán.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                  <h4>Previsualización en Tiempo Real</h4>
+                  <p>Durante la creación podrás pasar el cursor sobre cualquier mod para ver su carátula oficial de la Steam Workshop, autor, fecha y descripción, facilitando saber qué estás incluyendo exactamente.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                  <h4>Exporta y Comparte en Archivo JSON</h4>
+                  <p>Puedes exportar tu colección a un archivo <code>.json</code> ligero con 1 clic para enviárselo a tus amigos. Al importarlo en otra PC, la app revisará si tienen los mods y los guiará para suscribirse automáticamente si falta alguno.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Persistent Mode -->
+          <div class="guide-content-panel" id="guide-persistent">
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                  <h4>¿Qué es un Modpack Persistente?</h4>
+                  <p>Normalmente, cuando te desuscribes de un mod en la Steam Workshop, Steam detecta el cambio y borra el archivo <code>.vpk</code> de tu carpeta. La función de <strong>Modpack Persistente</strong> almacena una copia autónoma en <code>dce_storage/</code> usando Zero-Copy, asegurando que tus mods nunca desaparezcan.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                  <h4>Cómo Convertir un Modpack a Persistente</h4>
+                  <p>Al crear un modpack o en la tarjeta de cualquier modpack existente, activa el interruptor <em>"Modpack Persistente"</em>. La app asegurará los archivos al instante ocupando 0 MB extra mediante hardlinks.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                  <h4>Limpia tu Menú de Ampliaciones en el Juego</h4>
+                  <p>Ahora puedes desuscribirte con tranquilidad de los mods en la Workshop de Steam. Tu menú de addons dentro de Left 4 Dead 2 quedará 100% limpio y sin saturación, ¡pero todos tus mods seguirán activos en Versus!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 5: Desktop Shortcuts -->
+          <div class="guide-content-panel" id="guide-shortcuts">
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                  <h4>Genera un Acceso Directo de tu Modpack</h4>
+                  <p>En la tarjeta de tu modpack preferido, presiona el botón <em>"Crear Acceso Directo"</em>. Se generará un icono en tu Escritorio con el nombre y la foto personalizada que elegiste.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                  <h4>Inicio Rápido Headless (< 0.5s)</h4>
+                  <p>Al hacer doble clic en el acceso directo, la app desmontará cualquier mod anterior, montará los nuevos y abrirá Left 4 Dead 2 en menos de medio segundo, sin ventanas de consola ni demoras.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                  <h4>Cambio Fluido entre Modpacks</h4>
+                  <p>Si acabas de cerrar el juego usando el Modpack de Anime y haces clic en el acceso directo del Modpack Militar, el sistema espera activamente la liberación del proceso y efectúa el cambio limpiamente sin errores.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         COMPARISON SECTION
+         ============================================================================== -->
+    <section class="section" id="comparativa">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-tag">Diferencias Técnicas</span>
+          <h2 class="section-title">¿Por qué elegir <span class="text-gradient">DCE Mods Loader</span>?</h2>
+          <p class="section-desc">
+            Compara cómo funciona el sistema tradicional frente a nuestra arquitectura Zero-Copy de alto rendimiento.
+          </p>
+        </div>
+
+        <div class="comparison-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Característica</th>
+                <th>Workshop Normal</th>
+                <th>Modloaders Antiguos</th>
+                <th class="highlight">DCE MODS LOADER</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Funciona en Versus Oficial (sv_consistency 1)</td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> Bloqueado</span></td>
+                <td><span class="check-icon"><i class="fas fa-check"></i> Parcial</span></td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-check-double"></i> 100% Compatible</span></td>
+              </tr>
+              <tr>
+                <td>Seguridad contra Baneo VAC de Steam</td>
+                <td><span class="check-icon"><i class="fas fa-check"></i> Seguro</span></td>
+                <td><span class="cross-icon"><i class="fas fa-triangle-exclamation"></i> Riesgoso (Inyección DLL)</span></td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-shield-halved"></i> 100% Seguro (Zero Injections)</span></td>
+              </tr>
+              <tr>
+                <td>Espacio en Disco al Activar Mods</td>
+                <td>0 MB (No funciona en Versus)</td>
+                <td>Duplica archivos (+20 GB)</td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-leaf"></i> 0 MB Extra (Zero-Copy)</span></td>
+              </tr>
+              <tr>
+                <td>Velocidad de Activación (50 addons)</td>
+                <td>N/A</td>
+                <td>~35 a 60 segundos</td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-bolt"></i> &lt; 0.05 segundos</span></td>
+              </tr>
+              <tr>
+                <td>Jugar Desuscrito de la Workshop</td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> Imposible</span></td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> No Soportado</span></td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-check"></i> Sí (Modpack Persistente)</span></td>
+              </tr>
+              <tr>
+                <td>Soporte Nativo Linux & Steam Deck (SteamOS)</td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> Bloqueado</span></td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> Solo Windows (.bat/.exe)</span></td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-check"></i> Nativo Flatpak (KDE/Wayland)</span></td>
+              </tr>
+              <tr>
+                <td>Detección de Conflictos de Archivos VPK</td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> No</span></td>
+                <td><span class="cross-icon"><i class="fas fa-times"></i> No</span></td>
+                <td class="highlight"><span class="check-icon"><i class="fas fa-check"></i> Tiempo Real Integrado</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         DOWNLOADS SECTION
+         ============================================================================== -->
+    <section class="section" id="descargas">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-tag">Descarga Oficial y Gratuita</span>
+          <h2 class="section-title">Elige tu <span class="text-gradient">Plataforma</span></h2>
+          <p class="section-desc">
+            Última versión estable publicada: <strong>v1.0.9</strong>. Código abierto y libre de publicidad.
+          </p>
+        </div>
+
+        <div class="downloads-grid">
+          
+          <!-- Windows Card -->
+          <div class="download-card">
+            <div class="download-icon">
+              <i class="fab fa-windows"></i>
+            </div>
+            <h3 class="download-platform">Windows 10 / 11</h3>
+            <p class="download-meta">Ejecutable Portable Autónomo (.exe) • 62 MB</p>
+
+            <ul class="download-features">
+              <li><i class="fas fa-check"></i> 100% Portable: No requiere instalar Python ni dependencias</li>
+              <li><i class="fas fa-check"></i> Soporte de Enlaces Duros (Hardlinks) Zero-Copy en NTFS</li>
+              <li><i class="fas fa-check"></i> Minimizado inteligente a la bandeja del sistema (System Tray)</li>
+              <li><i class="fas fa-check"></i> Seguridad de Instancia Única mediante Mutex del Kernel</li>
+            </ul>
+
+            <div class="download-btn-wrapper">
+              <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases/download/v1.0.9/DCE_Mod_Loader_L4D2.exe" class="btn btn-primary btn-lg">
+                <i class="fas fa-download"></i>
+                <span>Descargar DCE_Mod_Loader_L4D2.exe</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Linux / Steam Deck Card -->
+          <div class="download-card">
+            <div class="download-icon">
+              <i class="fab fa-linux"></i>
+            </div>
+            <h3 class="download-platform">Linux & Steam Deck</h3>
+            <p class="download-meta">Paquete Sandboxed Flatpak (.flatpak) • 20 MB</p>
+
+            <ul class="download-features">
+              <li><i class="fas fa-check"></i> Compatible con SteamOS, Ubuntu, Arch, Fedora, Debian</li>
+              <li><i class="fas fa-check"></i> Detección automática en almacenamiento interno y MicroSD</li>
+              <li><i class="fas fa-check"></i> Soporte de protocolo D-Bus StatusNotifierItem (KDE/Wayland)</li>
+              <li><i class="fas fa-check"></i> Instalable con 1 clic en Discover o vía comando de terminal</li>
+            </ul>
+
+            <div class="download-btn-wrapper">
+              <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases/download/v1.0.9/DCE_Mods_Loader.flatpak" class="btn btn-primary btn-lg">
+                <i class="fas fa-download"></i>
+                <span>Descargar DCE_Mods_Loader.flatpak</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 48px;">
+          <p style="color: var(--text-dim); margin-bottom: 16px;">
+            ¿Deseas compilar desde el código fuente o ver versiones anteriores?
+          </p>
+          <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            <i class="fab fa-github"></i>
+            <span>Ver todos los Releases en GitHub</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         FAQ SECTION
+         ============================================================================== -->
+    <section class="section" id="faq">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-tag">Dudas y Respuestas</span>
+          <h2 class="section-title">Preguntas <span class="text-gradient">Frecuentes</span></h2>
+          <p class="section-desc">
+            Todo lo que necesitas saber sobre la seguridad, funcionamiento y compatibilidad de DCE Mods Loader.
+          </p>
+        </div>
+
+        <div class="faq-container">
+          
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Me pueden banear por VAC en Steam al usar esta herramienta?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <strong>No, rotundo y definitivo.</strong> Valve Anti-Cheat (VAC) detecta modificaciones en ejecutables (como <code>hl2.exe</code> o <code>left4dead2.exe</code>) e inyecciones de código malicioso o DLLs en la memoria del juego. DCE Mods Loader <strong>NO</strong> inyecta ninguna DLL ni toca la memoria; simplemente utiliza la directiva nativa <code>SearchPaths</code> del propio motor Source de Valve en el archivo <code>gameinfo.txt</code>, exactamente igual que como funcionan los DLCs oficiales del juego.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Por qué funciona en Versus si los servidores tienen sv_consistency 1?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                El comando de consistencia del servidor revisa los archivos montados en la carpeta <code>addons/workshop/</code>. Al montar los addons como recursos del juego de alta prioridad mediante <code>gameinfo.txt</code>, el motor Source carga las texturas y modelos como si fueran recursos base instalados del juego, omitiendo la restricción de consistencia sin modificar la consola ni dar ventaja antideportiva.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cómo funciona el modo de Modpack Persistente?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Normalmente, al desuscribirte de un mod en la Workshop, Steam lo elimina de tu disco duro. El modo persistente respalda el archivo <code>.vpk</code> en la carpeta interna <code>dce_storage/</code> usando enlaces duros (0 MB extra en Windows). Cuando activas el modpack, DCE Mods Loader lo carga desde ese almacén local, permitiéndote jugar en Versus con el addon activo aunque no estés suscrito en Steam.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cómo lo instalo en mi Steam Deck con SteamOS?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                1. Entra al <strong>Modo Escritorio (Desktop Mode)</strong> de tu Steam Deck.<br />
+                2. Descarga el archivo <code>DCE_Mods_Loader.flatpak</code>.<br />
+                3. Haz doble clic para instalarlo a través del gestor Discover.<br />
+                4. Abre Steam, ve a <em>"Juegos > Añadir un juego que no es de Steam"</em> y selecciona DCE Mods Loader para poder iniciarlo también desde el Gaming Mode.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Qué ocurre si Valve actualiza Left 4 Dead 2?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Si una actualización de Steam sobreescribe el archivo <code>gameinfo.txt</code>, no hay problema alguno: abre DCE Mods Loader, haz clic en tu modpack o selecciona tus mods y presiona <strong>JUGAR</strong>. La aplicación reinyectará los enlaces limpios en menos de un segundo sin que tengas que volver a descargar nada. Además, dispones de un botón de <em>Restauración Limpia a Fábrica</em> en el panel de herramientas.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         FOOTER
+         ============================================================================== -->
+    <footer class="footer">
+      <div class="container">
+        
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="nav-brand">
+              <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+              <span>DCE MODS LOADER</span>
+            </div>
+            <p class="footer-desc">
+              Suite de herramientas avanzada desarrollada con pasión por <strong>DCE STUDIOS</strong> para la comunidad de Left 4 Dead 2 y Versus competitivo.
+            </p>
+          </div>
+
+          <div class="footer-column">
+            <h4>Navegación</h4>
+            <ul class="footer-links">
+              <li><a href="#hero">Inicio</a></li>
+              <li><a href="#caracteristicas">Características</a></li>
+              <li><a href="#guia">Guía de Uso</a></li>
+              <li><a href="#comparativa">Comparativa</a></li>
+              <li><a href="#descargas">Descargas</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>Descargas (v1.0.9)</h4>
+            <ul class="footer-links">
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases/download/v1.0.9/DCE_Mod_Loader_L4D2.exe">Windows 10 / 11 (.exe)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases/download/v1.0.9/DCE_Mods_Loader.flatpak">Linux / Steam Deck (.flatpak)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2/releases" target="_blank" rel="noopener noreferrer">Notas de la Versión</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>DCE STUDIOS</h4>
+            <ul class="footer-links">
+              <li><a href="https://dcegaming.netlify.app/" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> Web Oficial</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> Repositorio GitHub</a></li>
+              <li><a href="https://dcegaming.netlify.app/" target="_blank" rel="noopener noreferrer"><i class="fas fa-gamepad"></i> Más Juegos & Apps</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 DCE STUDIOS. Todos los derechos reservados.</p>
+          <p>Left 4 Dead 2 y el logotipo de Steam son marcas registradas de Valve Corporation. Este proyecto es una herramienta independiente creada para la comunidad.</p>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
