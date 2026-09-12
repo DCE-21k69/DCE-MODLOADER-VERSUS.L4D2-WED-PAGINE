@@ -892,8 +892,105 @@ a {
   margin-top: auto;
 }
 
-.download-btn-wrapper .btn {
+.download-btn-wrapper .btn,
+.download-btn-wrapper .btn-coming-soon {
   width: 100%;
+}
+
+.btn-coming-soon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 1.02rem;
+  background: rgba(255, 106, 0, 0.12);
+  color: var(--flame-gold);
+  border: 1.5px solid rgba(255, 157, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.12);
+  user-select: none;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.btn-coming-soon:hover {
+  background: rgba(255, 106, 0, 0.2);
+  border-color: var(--flame-orange);
+  box-shadow: 0 0 30px rgba(255, 106, 0, 0.25);
+  color: #fff;
+}
+
+.coming-soon-banner {
+  max-width: 980px;
+  margin: 48px auto 0;
+  background: var(--grad-dark-card);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 30px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.coming-soon-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--grad-flame);
+}
+
+.coming-soon-banner .banner-content {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.coming-soon-banner .banner-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 106, 0, 0.15);
+  border: 1px solid rgba(255, 106, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--flame-gold);
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+}
+
+.coming-soon-banner .banner-text h4 {
+  font-size: 1.25rem;
+  margin-bottom: 6px;
+  color: var(--text-pure);
+}
+
+.coming-soon-banner .banner-text p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .coming-soon-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+  }
+  .coming-soon-banner .banner-content {
+    flex-direction: column;
+  }
 }
 
 /* ==============================================================================
