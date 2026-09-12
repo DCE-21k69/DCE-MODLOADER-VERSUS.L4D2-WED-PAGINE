@@ -61,8 +61,13 @@
           <li><a href="#comparativa" class="nav-link">Comparativa</a></li>
           <li><a href="#proximamente" class="nav-link">Próximamente</a></li>
           <li><a href="#desarrollador" class="nav-link">Desarrollador</a></li>
-          <li><a href="#comunidad" class="nav-link">Comunidad</a></li>
+          <li><a href="comunidad.html" class="nav-link nav-link-community"><i class="fas fa-users"></i> Comunidad Hub</a></li>
           <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <li class="mobile-only-action">
+            <a href="comunidad.html" class="btn btn-secondary btn-sm" style="width: 100%;">
+              <i class="fas fa-users"></i> <span>Comunidad Hub</span>
+            </a>
+          </li>
           <li class="mobile-only-action">
             <a href="#proximamente" class="btn btn-primary btn-sm" style="width: 100%;">
               <i class="fas fa-clock"></i> <span>Próximo Lanzamiento</span>
@@ -710,242 +715,80 @@
     </section>
 
     <!-- ==============================================================================
-         COMMUNITY HUB & RESOURCES SECTION (MODPACKS & AUTOEXECS)
+         COMMUNITY HUB CALLOUT PORTAL (DIRIGE A LA PÁGINA DEDICADA COMUNIDAD.HTML)
          ============================================================================== -->
-    <section class="section" id="comunidad">
+    <section class="section" id="comunidad-portal">
       <div class="container">
         
-        <div class="section-header">
-          <span class="section-tag"><i class="fas fa-users"></i> Ecosistema Abierto DCE</span>
-          <h2 class="section-title">Comunidad <span class="text-gradient">Hub & Recursos</span></h2>
-          <p class="section-desc">
-            Descarga Modpacks persistentes (.dcepack), Autoexecs optimizados para Versus (.cfg) y comparte tus colecciones en nuestro almacenamiento Cloud oficial de 5TB verificado contra amenazas.
-          </p>
-        </div>
-
-        <!-- Highlight Trust & Cloud Banner -->
-        <div class="community-highlight-grid">
-          <div class="community-highlight-box">
-            <div class="comm-hl-icon"><i class="fas fa-cloud"></i></div>
-            <div class="comm-hl-body">
-              <h4>Almacenamiento Cloud de 5 TB</h4>
-              <p>Carpetas de alta velocidad en Google Drive Pro dedicadas a alojar modpacks completos y configuraciones.</p>
-            </div>
+        <div class="community-portal-card">
+          <div class="portal-badge-wrap">
+            <span class="badge badge-flame"><i class="fas fa-fire"></i> PLATAFORMA COMUNITARIA DEDICADA</span>
+            <span class="portal-live-pill"><span class="badge-pulse"></span> Sistema en Vivo</span>
           </div>
 
-          <div class="community-highlight-box">
-            <div class="comm-hl-icon"><i class="fas fa-shield-halved"></i></div>
-            <div class="comm-hl-body">
-              <h4>Escáner Preventivo de Malware</h4>
-              <p>Protección integrada: cualquier archivo ejecutable (.exe, .dll, bat) o sospechoso es bloqueado y purgado.</p>
-            </div>
-          </div>
-
-          <div class="community-highlight-box">
-            <div class="comm-hl-icon"><i class="fas fa-download"></i></div>
-            <div class="comm-hl-body">
-              <h4>Descarga Directa Inmediata</h4>
-              <p>Enlaces directos sin publicidad ni redirecciones intermedias. Descargas limpias listas para importar en la app.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 1: MODPACKS PERSISTENTES -->
-        <div class="community-sub-header">
-          <div class="comm-sub-title-wrap">
-            <span class="comm-sub-badge"><i class="fas fa-box-open"></i> FORMATO .DCEPACK</span>
-            <h3 class="comm-sub-heading">Colecciones de Modpacks Comunitarios</h3>
-            <p class="comm-sub-text">Paquetes autónomos que contienen texturas, armas, skins y dependencias respaldadas localmente (funcionan en Versus sin depender de Workshop).</p>
-          </div>
-          <a href="https://drive.google.com/drive/folders/1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm btn-drive-upload">
-            <i class="fab fa-google-drive"></i>
-            <span>Subir Modpack a Google Drive (5TB)</span>
-          </a>
-        </div>
-
-        <div class="community-grid">
-          <!-- Card 1: Versus Pro Comp 2026 -->
-          <div class="community-card">
-            <div class="community-card-header">
-              <div class="comm-badge-row">
-                <span class="badge badge-flame"><i class="fas fa-fire"></i> DESTACADO</span>
-                <span class="comm-version-badge">v2.4 Pro</span>
-                <span class="comm-security-badge"><i class="fas fa-check-shield"></i> Verificado Seguro</span>
-              </div>
-              <h4 class="comm-card-title">Versus Pro Pack 2026 (Competitivo)</h4>
-              <p class="comm-card-author"><i class="fas fa-user-check"></i> Autor: <strong>DCE STUDIOS</strong></p>
-            </div>
-            <p class="comm-card-desc">
-              Pack integral con modelos limpios sin partículas obstructoras, glow nítido de supervivientes y armas tácticas optimizadas para 100-Tickrate.
-            </p>
-            <div class="comm-card-meta">
-              <span><i class="fas fa-cubes"></i> 36 Mods</span>
-              <span><i class="fas fa-microchip"></i> Zero-Copy</span>
-              <span><i class="fas fa-shield-heart"></i> Anti-Cheat Safe</span>
-            </div>
-            <div class="comm-card-actions">
-              <a href="https://drive.google.com/uc?export=download&id=1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu" class="btn btn-primary btn-sm btn-comm-download" title="Descarga directa instantánea de archivo .dcepack">
-                <i class="fas fa-download"></i> <span>Descarga Directa (.dcepack)</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Card 2: CS2 Weapons & Glove Overhaul -->
-          <div class="community-card">
-            <div class="community-card-header">
-              <div class="comm-badge-row">
-                <span class="comm-version-badge">v1.8</span>
-                <span class="comm-security-badge"><i class="fas fa-check-shield"></i> Verificado Seguro</span>
-              </div>
-              <h4 class="comm-card-title">CS2 Modern Weapons & Clean Hands</h4>
-              <p class="comm-card-author"><i class="fas fa-user"></i> Autor: <strong>Freeman</strong></p>
-            </div>
-            <p class="comm-card-desc">
-              Sustitución fluida de escopetas, rifles y pistolas con animaciones pulidas de Counter-Strike 2. Diseñado para no causar desincronización en Versus.
-            </p>
-            <div class="comm-card-meta">
-              <span><i class="fas fa-cubes"></i> 18 Mods</span>
-              <span><i class="fas fa-bolt"></i> Fast Reload Fix</span>
-              <span><i class="fas fa-database"></i> Persistente</span>
-            </div>
-            <div class="comm-card-actions">
-              <a href="https://drive.google.com/uc?export=download&id=1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu" class="btn btn-secondary btn-sm btn-comm-download" title="Descarga directa instantánea de archivo .dcepack">
-                <i class="fas fa-download"></i> <span>Descarga Directa (.dcepack)</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Card 3: Enhanced Sounds & Cleaner HUD -->
-          <div class="community-card">
-            <div class="community-card-header">
-              <div class="comm-badge-row">
-                <span class="comm-version-badge">v1.2</span>
-                <span class="comm-security-badge"><i class="fas fa-check-shield"></i> Verificado Seguro</span>
-              </div>
-              <h4 class="comm-card-title">Competitive Audio & Minimalist UI</h4>
-              <p class="comm-card-author"><i class="fas fa-user"></i> Autor: <strong>Comunidad DCE</strong></p>
-            </div>
-            <p class="comm-card-desc">
-              Pistas de sonido de infectados especiales más notorias en campo abierto y mirilla compacta para máxima precisión en disparos a la cabeza.
-            </p>
-            <div class="comm-card-meta">
-              <span><i class="fas fa-cubes"></i> 12 Mods</span>
-              <span><i class="fas fa-volume-high"></i> Audio HD</span>
-              <span><i class="fas fa-crosshairs"></i> HUD Pro</span>
-            </div>
-            <div class="comm-card-actions">
-              <a href="https://drive.google.com/uc?export=download&id=1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu" class="btn btn-secondary btn-sm btn-comm-download" title="Descarga directa instantánea de archivo .dcepack">
-                <i class="fas fa-download"></i> <span>Descarga Directa (.dcepack)</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 2: CONFIGURACIONES AUTOEXEC (.CFG) -->
-        <div class="community-sub-header" style="margin-top: 48px;">
-          <div class="comm-sub-title-wrap">
-            <span class="comm-sub-badge" style="background: rgba(34, 197, 94, 0.15); color: #22c55e; border-color: rgba(34, 197, 94, 0.3);"><i class="fas fa-terminal"></i> FORMATO .CFG</span>
-            <h3 class="comm-sub-heading">Configuraciones Autoexec & Netcode</h3>
-            <p class="comm-sub-text">Ajustes universales de rate, cl_interp_ratio, binds y optimización gráfica. Inyección instantánea en left4dead2/cfg/ sin necesidad de abrir la consola.</p>
-          </div>
-          <a href="https://drive.google.com/drive/folders/1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm btn-drive-upload">
-            <i class="fab fa-google-drive"></i>
-            <span>Subir Autoexec a Google Drive (5TB)</span>
-          </a>
-        </div>
-
-        <div class="community-grid">
-          <!-- CFG Card 1 -->
-          <div class="community-card">
-            <div class="community-card-header">
-              <div class="comm-badge-row">
-                <span class="badge badge-flame">COMPETITIVO OFICIAL</span>
-                <span class="comm-version-badge">100-Tick</span>
-              </div>
-              <h4 class="comm-card-title">Competitivo 100-Tick & Lerp 0.0</h4>
-              <p class="comm-card-author"><i class="fas fa-user-check"></i> Autor: <strong>DCE STUDIOS</strong></p>
-            </div>
-            <p class="comm-card-desc">
-              Rate 100000, cl_interp 0.0, cl_updaterate 101. Registro de impactos inmediato (hitreg preciso) tanto para disparos como para ataques de infectados.
-            </p>
-            <div class="comm-card-meta">
-              <span><i class="fas fa-network-wired"></i> Lerp 0.0ms</span>
-              <span><i class="fas fa-bullseye"></i> Hitreg Pro</span>
-            </div>
-            <div class="comm-card-actions">
-              <a href="https://drive.google.com/uc?export=download&id=1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB" class="btn btn-primary btn-sm btn-comm-download" title="Descarga directa instantánea de archivo .cfg">
-                <i class="fas fa-download"></i> <span>Descarga Directa (.cfg)</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- CFG Card 2 -->
-          <div class="community-card">
-            <div class="community-card-header">
-              <div class="comm-badge-row">
-                <span class="comm-version-badge">Rendimiento</span>
-              </div>
-              <h4 class="comm-card-title">FPS Boost & Anti-Stutter Suite</h4>
-              <p class="comm-card-author"><i class="fas fa-user"></i> Autor: <strong>DCE Performance Lab</strong></p>
-            </div>
-            <p class="comm-card-desc">
-              Optimización intensiva de hilos de CPU (mat_queue_mode 2), desactivación de blur/motion redundante y estabilización para equipos de gama baja y media.
-            </p>
-            <div class="comm-card-meta">
-              <span><i class="fas fa-gauge-high"></i> +40% FPS</span>
-              <span><i class="fas fa-desktop"></i> Low-End Ready</span>
-            </div>
-            <div class="comm-card-actions">
-              <a href="https://drive.google.com/uc?export=download&id=1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB" class="btn btn-secondary btn-sm btn-comm-download" title="Descarga directa instantánea de archivo .cfg">
-                <i class="fas fa-download"></i> <span>Descarga Directa (.cfg)</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- CFG Card 3 -->
-          <div class="community-card">
-            <div class="community-card-header">
-              <div class="comm-badge-row">
-                <span class="comm-version-badge">Original</span>
-              </div>
-              <h4 class="comm-card-title">Vanilla Clean Defaults (Restauración)</h4>
-              <p class="comm-card-author"><i class="fas fa-user-shield"></i> Autor: <strong>Valve / DCE</strong></p>
-            </div>
-            <p class="comm-card-desc">
-              Configuración neutral para restaurar las tasas de red por defecto de Left 4 Dead 2 y limpiar comandos o binds conflictivos introducidos por otros servidores.
-            </p>
-            <div class="comm-card-meta">
-              <span><i class="fas fa-rotate-left"></i> 100% Limpio</span>
-              <span><i class="fas fa-shield-alt"></i> Valores Stock</span>
-            </div>
-            <div class="comm-card-actions">
-              <a href="https://drive.google.com/uc?export=download&id=1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB" class="btn btn-secondary btn-sm btn-comm-download" title="Descarga directa instantánea de archivo .cfg">
-                <i class="fas fa-download"></i> <span>Descarga Directa (.cfg)</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Community Callout Footer Card -->
-        <div class="community-upload-callout">
-          <div class="callout-content">
-            <div class="callout-icon"><i class="fab fa-google-drive"></i></div>
-            <div class="callout-text">
-              <h3>¿Cómo compartir tus creaciones?</h3>
-              <p>
-                1. Desde <strong>DCE Mods Loader</strong>, pulsa <em>"Exportar .dcepack"</em> en cualquiera de tus colecciones o guarda tu <em>.cfg</em> favorito.<br />
-                2. Sube el archivo a las carpetas públicas de Google Drive de DCE Studios.<br />
-                3. Nuestro escáner preventivo verificará que el archivo esté 100% libre de código malicioso antes de sincronizarlo con el catálogo público.
+          <div class="portal-grid">
+            <div class="portal-info">
+              <h2 class="portal-title">DCE <span class="text-gradient">Community Hub</span></h2>
+              <p class="portal-desc">
+                Accede a la plataforma oficial independiente donde podrás publicar tus propios Modpacks (.dcepack) y configuraciones Autoexec (.cfg), iniciar sesión con tu perfil de Steam, buscar creaciones de la comunidad y descargar archivos reales sin intermediarios ni publicidad.
               </p>
+
+              <div class="portal-features">
+                <div class="portal-feat-item">
+                  <i class="fab fa-steam"></i>
+                  <span>Login obligatorio con Steam para creadores</span>
+                </div>
+                <div class="portal-feat-item">
+                  <i class="fas fa-upload"></i>
+                  <span>Publicación directa con drag & drop de archivos</span>
+                </div>
+                <div class="portal-feat-item">
+                  <i class="fas fa-search"></i>
+                  <span>Buscador y filtros en tiempo real</span>
+                </div>
+                <div class="portal-feat-item">
+                  <i class="fas fa-id-card"></i>
+                  <span>Perfil de Steam clicable directo del autor</span>
+                </div>
+              </div>
+
+              <div class="portal-actions">
+                <a href="comunidad.html" class="btn btn-primary btn-lg">
+                  <i class="fas fa-arrow-up-right-from-square"></i>
+                  <span>Entrar al Community Hub</span>
+                </a>
+                <a href="https://steamcommunity.com/id/EducationEditionDCE/" target="_blank" rel="noopener noreferrer" class="btn btn-steam btn-lg">
+                  <i class="fab fa-steam"></i>
+                  <span>Steam del Creador</span>
+                </a>
+              </div>
             </div>
-          </div>
-          <div class="callout-actions">
-            <a href="https://drive.google.com/drive/folders/1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-md">
-              <i class="fas fa-folder-plus"></i> <span>Carpeta de Modpacks</span>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-md">
-              <i class="fas fa-file-code"></i> <span>Carpeta de Autoexecs</span>
-            </a>
+
+            <div class="portal-visual">
+              <div class="portal-box">
+                <div class="portal-box-header">
+                  <div class="window-dot dot-red"></div>
+                  <div class="window-dot dot-yellow"></div>
+                  <div class="window-dot dot-green"></div>
+                  <span class="portal-box-title">DCE Community Hub</span>
+                </div>
+                <div class="portal-box-body">
+                  <div class="portal-chip-row">
+                    <span class="portal-chip active"><i class="fas fa-box"></i> Modpacks</span>
+                    <span class="portal-chip"><i class="fas fa-terminal"></i> Autoexecs</span>
+                    <span class="portal-chip"><i class="fas fa-user"></i> Mis Publicaciones</span>
+                  </div>
+                  <div class="portal-preview-card">
+                    <div class="preview-card-top">
+                      <span class="preview-tag">Archivos Reales</span>
+                      <span class="preview-badge"><i class="fab fa-steam"></i> Creador Verificado</span>
+                    </div>
+                    <div class="preview-card-title">Publicación & Descargas Reales</div>
+                    <div class="preview-card-text">Sube tus archivos .dcepack y .cfg. Al hacer clic en el nombre del creador se abre su perfil oficial de Steam.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1062,7 +905,7 @@
               <li><a href="#comparativa">Comparativa</a></li>
               <li><a href="#proximamente">Próximamente</a></li>
               <li><a href="#desarrollador">Desarrollador</a></li>
-              <li><a href="#comunidad">Comunidad Hub</a></li>
+              <li><a href="comunidad.html">Comunidad Hub (Página Dedicada)</a></li>
             </ul>
           </div>
 
