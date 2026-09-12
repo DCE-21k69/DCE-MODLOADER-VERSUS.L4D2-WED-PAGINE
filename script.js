@@ -31,7 +31,8 @@ function initNavbar() {
   });
 
   if (navToggle && navLinks) {
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       navLinks.classList.toggle('open');
       const icon = navToggle.querySelector('i');
       if (icon) {
@@ -43,12 +44,22 @@ function initNavbar() {
       }
     });
 
-    links.forEach(link => {
+    // Close when clicking ANY link inside drawer
+    navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('open');
         const icon = navToggle.querySelector('i');
         if (icon) icon.className = 'fas fa-bars';
       });
+    });
+
+    // Close when clicking outside navbar
+    document.addEventListener('click', (e) => {
+      if (navLinks.classList.contains('open') && !navbar.contains(e.target)) {
+        navLinks.classList.remove('open');
+        const icon = navToggle.querySelector('i');
+        if (icon) icon.className = 'fas fa-bars';
+      }
     });
   }
 
@@ -171,6 +182,11 @@ function initParticles() {
 function initTiltEffect() {
   const card = document.getElementById('showcase-window');
   if (!card) return;
+
+  // Disable 3D tilt on mobile or touch-only screens for maximum performance & cleanliness
+  if (window.innerWidth <= 768 || !window.matchMedia('(hover: hover)').matches) {
+    return;
+  }
 
   const wrapper = document.querySelector('.showcase-wrapper');
 
