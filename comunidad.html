@@ -116,7 +116,11 @@
           
           <!-- Category Tabs -->
           <div class="comm-tabs-nav">
-            <button class="comm-tab-btn active" id="tab-modpacks" data-tab="modpacks">
+            <button class="comm-tab-btn active" id="tab-all" data-tab="all">
+              <i class="fas fa-layer-group"></i>
+              <span>Ver Todo</span>
+            </button>
+            <button class="comm-tab-btn" id="tab-modpacks" data-tab="modpacks">
               <i class="fas fa-box-open"></i>
               <span>Modpacks (.dcepack)</span>
             </button>
@@ -172,13 +176,85 @@
 
         </div>
 
-        <!-- Dynamic Items Grid -->
+        <!-- Structured Section Boxes for Modpacks and Autoexecs -->
         <div class="comm-grid-container">
-          <div class="community-grid" id="items-grid">
-            <!-- Cards rendered dynamically via comunidad.js -->
+
+          <!-- 1. Cuadro de Modpacks (.dcepack) -->
+          <div class="community-section-box" id="section-box-modpacks">
+            <div class="section-box-header">
+              <div class="section-box-title">
+                <span class="section-box-icon flame-icon"><i class="fas fa-box-open"></i></span>
+                <div>
+                  <h3>Modpacks Persistentes (.dcepack)</h3>
+                  <p>Colecciones integrales de addons, armas y skins adaptadas para Versus sin baneo VAC</p>
+                </div>
+              </div>
+              <div class="section-box-meta">
+                <span class="badge badge-flame" id="badge-count-modpacks">0 Modpacks</span>
+              </div>
+            </div>
+            
+            <div class="community-grid" id="grid-modpacks">
+              <!-- Modpack Cards rendered dynamically -->
+            </div>
+
+            <div class="comm-box-empty" id="empty-modpacks" style="display: none;">
+              <i class="fas fa-box-open"></i>
+              <p>No hay modpacks publicados en esta categoría o búsqueda.</p>
+            </div>
           </div>
 
-          <!-- Empty State (Shown when 0 items exist) -->
+          <!-- 2. Cuadro de Autoexecs (.cfg) -->
+          <div class="community-section-box" id="section-box-autoexecs">
+            <div class="section-box-header">
+              <div class="section-box-title">
+                <span class="section-box-icon green-icon"><i class="fas fa-terminal"></i></span>
+                <div>
+                  <h3>Autoexecs & ConVars Competitivas (.cfg)</h3>
+                  <p>Scripts de configuración, FPS boost, lerp de servidor, tasas de red y binds de juego</p>
+                </div>
+              </div>
+              <div class="section-box-meta">
+                <span class="badge badge-green" id="badge-count-autoexecs">0 Autoexecs</span>
+              </div>
+            </div>
+            
+            <div class="community-grid" id="grid-autoexecs">
+              <!-- Autoexec Cards rendered dynamically -->
+            </div>
+
+            <div class="comm-box-empty" id="empty-autoexecs" style="display: none;">
+              <i class="fas fa-terminal"></i>
+              <p>No hay configuraciones autoexec publicadas en esta categoría o búsqueda.</p>
+            </div>
+          </div>
+
+          <!-- 3. Cuadro de Mis Publicaciones (Visible en pestaña "Mis Publicaciones") -->
+          <div class="community-section-box" id="section-box-my-posts" style="display: none;">
+            <div class="section-box-header">
+              <div class="section-box-title">
+                <span class="section-box-icon blue-icon"><i class="fas fa-user-pen"></i></span>
+                <div>
+                  <h3>Mis Publicaciones Comunitarias</h3>
+                  <p>Tus creaciones publicadas con tu perfil verificado de Steam (puedes administrarlas o eliminarlas)</p>
+                </div>
+              </div>
+              <div class="section-box-meta">
+                <span class="badge badge-blue" id="badge-count-my-posts">0 Publicaciones</span>
+              </div>
+            </div>
+            
+            <div class="community-grid" id="grid-my-posts">
+              <!-- User's own Cards rendered dynamically -->
+            </div>
+
+            <div class="comm-box-empty" id="empty-my-posts" style="display: none;">
+              <i class="fas fa-folder-open"></i>
+              <p>Aún no has publicado ningún Modpack ni Autoexec. ¡Usa el botón "+ Publicar Creación" para compartir el primero!</p>
+            </div>
+          </div>
+
+          <!-- Global Empty State (Shown when 0 items exist anywhere) -->
           <div class="comm-empty-state" id="empty-state" style="display: none;">
             <div class="empty-icon-wrapper">
               <i class="fas fa-folder-open"></i>
@@ -215,58 +291,47 @@
        MODAL: STEAM LOGIN (OBLIGATORIO PARA CREADORES)
        ============================================================================== -->
   <div class="comm-modal-backdrop" id="modal-steam-login">
-    <div class="comm-modal-card">
+    <div class="comm-modal-card steam-auth-modal-card">
       <div class="comm-modal-header">
         <div class="modal-title-wrap">
           <i class="fab fa-steam modal-title-icon" style="color: #66c0f4;"></i>
           <div>
-            <h3 class="modal-title">Iniciar Sesión con Steam</h3>
-            <p class="modal-sub">Crea tu perfil de creador verificado para publicar modpacks y autoexecs.</p>
+            <h3 class="modal-title">Iniciar Sesión Oficial con Steam</h3>
+            <p class="modal-sub">Autenticación criptográfica segura directa con Valve Corporation (Steam OpenID 2.0).</p>
           </div>
         </div>
         <button class="modal-close-btn" id="close-steam-modal"><i class="fas fa-times"></i></button>
       </div>
 
-      <form id="steam-login-form" class="comm-modal-form">
-        <div class="form-group">
-          <label class="form-label" for="steam-input">Enlace de tu Perfil de Steam o Steam ID:</label>
-          <div class="input-with-icon">
-            <i class="fab fa-steam input-icon"></i>
-            <input 
-              type="text" 
-              id="steam-input" 
-              class="form-input" 
-              placeholder="Ej: https://steamcommunity.com/id/tu_nombre/ o tu_usuario" 
-              required 
-            />
+      <div class="steam-auth-modal-body">
+        <div class="steam-auth-info-banner">
+          <div class="steam-badge-shield">
+            <i class="fas fa-shield-halved"></i>
           </div>
-          <span class="form-hint">Tu nombre y avatar se vincularán a tus creaciones. Al hacer clic en tu nombre, se abrirá tu perfil oficial de Steam.</span>
+          <div class="steam-info-content">
+            <h4>Seguridad Garantizada por Valve</h4>
+            <p>Al hacer clic en el botón inferior, serás redirigido a la página oficial de <strong>Valve Corporation</strong> (<code>steamcommunity.com</code>). Inicia sesión de forma 100% segura con tus credenciales y Steam Guard.</p>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="steam-nickname">Nombre de Creador (Persona Name):</label>
-          <input 
-            type="text" 
-            id="steam-nickname" 
-            class="form-input" 
-            placeholder="Ej: DCE, Freeman, TuNickname" 
-            maxlength="32" 
-            required 
-          />
-        </div>
+        <ul class="steam-benefits-list">
+          <li><i class="fas fa-check-circle"></i> <strong>Cero riesgo:</strong> Tu contraseña y credenciales NUNCA pasan por nuestros servidores.</li>
+          <li><i class="fas fa-check-circle"></i> <strong>Identidad Real Verificada:</strong> Nadie puede hacerse pasar por ti; tu Steam ID64, nombre y avatar son validados con firma de Valve.</li>
+          <li><i class="fas fa-check-circle"></i> <strong>Insignia de Creador Oficial:</strong> Tus modpacks y autoexecs llevarán tu perfil real de Steam vinculado.</li>
+        </ul>
 
-        <div class="steam-modal-notice">
-          <i class="fas fa-shield-halved"></i>
-          <span>Tus publicaciones tendrán la insignia de <strong>Creador Verificado de Steam</strong> y los jugadores podrán ver tus mods oficiales directamente en Steam.</span>
+        <div class="steam-auth-action-box">
+          <a href="/.netlify/functions/steam-auth?action=login" class="btn btn-steam btn-lg btn-steam-login-direct" id="btn-steam-auth-direct">
+            <i class="fab fa-steam"></i>
+            <span>Iniciar Sesión en Steam</span>
+          </a>
+          <span class="steam-valve-note">Al iniciar sesión, aceptas vincular tu perfil público de Steam a tus publicaciones comunitarias.</span>
         </div>
+      </div>
 
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary btn-md" id="cancel-steam-modal">Cancelar</button>
-          <button type="submit" class="btn btn-steam btn-md">
-            <i class="fab fa-steam"></i> <span>Vincular Perfil de Steam</span>
-          </button>
-        </div>
-      </form>
+      <div class="modal-actions" style="margin-top: 20px; justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary btn-md" id="cancel-steam-modal">Cerrar</button>
+      </div>
     </div>
   </div>
 

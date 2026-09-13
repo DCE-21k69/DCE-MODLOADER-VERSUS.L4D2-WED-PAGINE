@@ -1,6 +1,7 @@
 # Netlify configuration for DCE Mods Loader Webpage
 [build]
   publish = "."
+  functions = "netlify/functions"
 
 [[headers]]
   for = "/*"

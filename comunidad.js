@@ -26,7 +26,7 @@ function fileToBase64(file) {
 }
 
 let db = null;
-let currentTab = 'modpacks';
+let currentTab = 'all';
 let currentFilter = 'all';
 let searchQuery = '';
 let selectedFile = null;
@@ -133,57 +133,41 @@ function clearSteamUser() {
 
 function initSteamAuth() {
   const btnLogin = document.getElementById('btn-steam-login');
-  const modalLogin = document.getElementById('modal-steam-login');
   const closeBtn = document.getElementById('close-steam-modal');
   const cancelBtn = document.getElementById('cancel-steam-modal');
-  const form = document.getElementById('steam-login-form');
+
+  // Detect Steam OpenID callback in URL (?steam_auth=... or ?steam_error=...)
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const steamAuthParam = urlParams.get('steam_auth');
+    const steamErrorParam = urlParams.get('steam_error');
+
+    if (steamAuthParam) {
+      const decodedUser = JSON.parse(decodeURIComponent(steamAuthParam));
+      if (decodedUser && decodedUser.steamId) {
+        setSteamUser(decodedUser);
+        showCommToast(`¡Bienvenido, ${decodedUser.name}! Autenticado oficialmente por Steam Guard.`, 'ok');
+      }
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    } else if (steamErrorParam) {
+      if (steamErrorParam === 'cancelled') {
+        showCommToast('Inicio de sesión en Steam cancelado.', 'warn');
+      } else {
+        showCommToast(`Error de autenticación con Steam: ${steamErrorParam}`, 'err');
+      }
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  } catch (err) {
+    console.error('Error al procesar callback de Steam:', err);
+  }
 
   if (btnLogin) {
     btnLogin.addEventListener('click', () => openSteamModal());
   }
   if (closeBtn) closeBtn.addEventListener('click', () => closeSteamModal());
   if (cancelBtn) cancelBtn.addEventListener('click', () => closeSteamModal());
-
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const inputVal = (document.getElementById('steam-input').value || '').trim();
-      const nicknameVal = (document.getElementById('steam-nickname').value || '').trim();
-
-      if (!inputVal || !nicknameVal) {
-        showCommToast('Por favor completa todos los campos del perfil.', 'warn');
-        return;
-      }
-
-      let profileUrl = inputVal;
-      let steamId = nicknameVal.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-      if (!profileUrl.startsWith('http://') && !profileUrl.startsWith('https://')) {
-        if (/^\d{17}$/.test(profileUrl)) {
-          steamId = profileUrl;
-          profileUrl = `https://steamcommunity.com/profiles/${profileUrl}/`;
-        } else {
-          profileUrl = `https://steamcommunity.com/id/${profileUrl}/`;
-        }
-      } else {
-        const match = profileUrl.match(/(?:id|profiles)\/([^/]+)/);
-        if (match) steamId = match[1];
-      }
-
-      const user = {
-        name: nicknameVal,
-        profileUrl: profileUrl,
-        steamId: steamId || nicknameVal,
-        avatar: 'icono.png',
-        joinedAt: new Date().toISOString()
-      };
-
-      setSteamUser(user);
-      closeSteamModal();
-      showCommToast(`¡Bienvenido, ${user.name}! Perfil de Steam vinculado con éxito.`, 'ok');
-      refreshView();
-    });
-  }
 
   updateSteamUI();
 }
@@ -603,11 +587,12 @@ async function refreshView() {
   const items = await dbGetAllPublications();
   const user = getSteamUser();
 
-  // Update Global Stats
+  // 1. Separate by type
   const modpacksList = items.filter(i => i.type === 'modpack');
   const autoexecsList = items.filter(i => i.type === 'autoexec');
   const authorsSet = new Set(items.map(i => i.authorSteamId || i.authorName));
 
+  // 2. Global stats
   const statModpacks = document.getElementById('stat-modpacks');
   const statAutoexecs = document.getElementById('stat-autoexecs');
   const statCreators = document.getElementById('stat-creators');
@@ -620,141 +605,198 @@ async function refreshView() {
   const myPosts = user ? items.filter(i => i.authorSteamId === user.steamId) : [];
   if (myPostsBadge) myPostsBadge.textContent = myPosts.length;
 
-  // Filter items for current tab
-  let filtered = [];
-  if (currentTab === 'modpacks') {
-    filtered = modpacksList;
+  // 3. Filter function for Search Query & Category Chips
+  const filterItem = (item) => {
+    if (currentFilter !== 'all' && item.category !== currentFilter) {
+      return false;
+    }
+    if (searchQuery) {
+      const t = (item.title || '').toLowerCase();
+      const a = (item.authorName || '').toLowerCase();
+      const d = (item.description || '').toLowerCase();
+      const v = (item.version || '').toLowerCase();
+      const c = (item.category || '').toLowerCase();
+      if (!t.includes(searchQuery) && !a.includes(searchQuery) && !d.includes(searchQuery) && !v.includes(searchQuery) && !c.includes(searchQuery)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const filteredModpacks = modpacksList.filter(filterItem).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const filteredAutoexecs = autoexecsList.filter(filterItem).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const filteredMyPosts = myPosts.filter(filterItem).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  // 4. Section Box Containers
+  const boxModpacks = document.getElementById('section-box-modpacks');
+  const boxAutoexecs = document.getElementById('section-box-autoexecs');
+  const boxMyPosts = document.getElementById('section-box-my-posts');
+  const emptyStateGlobal = document.getElementById('empty-state');
+  const emptyDescGlobal = document.getElementById('empty-desc');
+
+  // Control visibility of section boxes according to currentTab
+  if (currentTab === 'all') {
+    if (boxModpacks) boxModpacks.style.display = 'block';
+    if (boxAutoexecs) boxAutoexecs.style.display = 'block';
+    if (boxMyPosts) boxMyPosts.style.display = 'none';
+  } else if (currentTab === 'modpacks') {
+    if (boxModpacks) boxModpacks.style.display = 'block';
+    if (boxAutoexecs) boxAutoexecs.style.display = 'none';
+    if (boxMyPosts) boxMyPosts.style.display = 'none';
   } else if (currentTab === 'autoexecs') {
-    filtered = autoexecsList;
+    if (boxModpacks) boxModpacks.style.display = 'none';
+    if (boxAutoexecs) boxAutoexecs.style.display = 'block';
+    if (boxMyPosts) boxMyPosts.style.display = 'none';
   } else if (currentTab === 'my-posts') {
-    filtered = myPosts;
+    if (boxModpacks) boxModpacks.style.display = 'none';
+    if (boxAutoexecs) boxAutoexecs.style.display = 'none';
+    if (boxMyPosts) boxMyPosts.style.display = 'block';
   }
 
-  // Apply Category Chip Filter
-  if (currentFilter !== 'all') {
-    filtered = filtered.filter(i => i.category === currentFilter);
+  // 5. Populate Modpacks Box
+  populateBox({
+    gridId: 'grid-modpacks',
+    emptyId: 'empty-modpacks',
+    badgeId: 'badge-count-modpacks',
+    items: filteredModpacks,
+    badgeSuffix: 'Modpacks',
+    isMyPost: false
+  });
+
+  // 6. Populate Autoexecs Box
+  populateBox({
+    gridId: 'grid-autoexecs',
+    emptyId: 'empty-autoexecs',
+    badgeId: 'badge-count-autoexecs',
+    items: filteredAutoexecs,
+    badgeSuffix: 'Autoexecs',
+    isMyPost: false
+  });
+
+  // 7. Populate My Posts Box
+  populateBox({
+    gridId: 'grid-my-posts',
+    emptyId: 'empty-my-posts',
+    badgeId: 'badge-count-my-posts',
+    items: filteredMyPosts,
+    badgeSuffix: 'Publicaciones',
+    isMyPost: true
+  });
+
+  // 8. Global Empty State check
+  if (emptyStateGlobal) {
+    let totalVisible = 0;
+    if (currentTab === 'all') totalVisible = filteredModpacks.length + filteredAutoexecs.length;
+    else if (currentTab === 'modpacks') totalVisible = filteredModpacks.length;
+    else if (currentTab === 'autoexecs') totalVisible = filteredAutoexecs.length;
+    else if (currentTab === 'my-posts') totalVisible = filteredMyPosts.length;
+
+    if (totalVisible === 0 && (searchQuery || currentFilter !== 'all')) {
+      emptyStateGlobal.style.display = 'flex';
+      if (emptyDescGlobal) emptyDescGlobal.textContent = 'No se encontraron publicaciones que coincidan con la búsqueda o filtro aplicado.';
+    } else {
+      emptyStateGlobal.style.display = 'none';
+    }
   }
-
-  // Apply Search Query Filter
-  if (searchQuery) {
-    filtered = filtered.filter(i => {
-      const t = (i.title || '').toLowerCase();
-      const a = (i.authorName || '').toLowerCase();
-      const d = (i.description || '').toLowerCase();
-      const v = (i.version || '').toLowerCase();
-      const c = (i.category || '').toLowerCase();
-      return t.includes(searchQuery) || a.includes(searchQuery) || d.includes(searchQuery) || v.includes(searchQuery) || c.includes(searchQuery);
-    });
-  }
-
-  // Sort by newest first
-  filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-  renderGrid(filtered);
 }
 
-function renderGrid(items) {
-  const grid = document.getElementById('items-grid');
-  const emptyState = document.getElementById('empty-state');
-  const emptyDesc = document.getElementById('empty-desc');
+function populateBox({ gridId, emptyId, badgeId, items, badgeSuffix, isMyPost }) {
+  const grid = document.getElementById(gridId);
+  const empty = document.getElementById(emptyId);
+  const badge = document.getElementById(badgeId);
 
-  if (!grid || !emptyState) return;
+  if (badge) badge.textContent = `${items.length} ${badgeSuffix}`;
 
+  if (!grid) return;
   grid.innerHTML = '';
 
   if (items.length === 0) {
     grid.style.display = 'none';
-    emptyState.style.display = 'flex';
-
-    if (currentTab === 'my-posts') {
-      emptyDesc.textContent = 'Aún no has publicado ningún Modpack ni Autoexec. ¡Usa el botón "+ Publicar Creación" para compartir el primero!';
-    } else if (searchQuery || currentFilter !== 'all') {
-      emptyDesc.textContent = 'No se encontraron publicaciones que coincidan con los filtros de búsqueda aplicados.';
-    } else {
-      emptyDesc.textContent = currentTab === 'modpacks'
-        ? 'Aún no hay Modpacks publicados. ¡Inicia sesión con Steam y sé el primero en subir un archivo .dcepack!'
-        : 'Aún no hay Autoexecs publicados. ¡Inicia sesión con Steam y sé el primero en subir tu archivo .cfg!';
-    }
+    if (empty) empty.style.display = 'flex';
     return;
   }
 
   grid.style.display = 'grid';
-  emptyState.style.display = 'none';
+  if (empty) empty.style.display = 'none';
 
   items.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'community-card';
-
-    const isMyPost = (currentTab === 'my-posts');
-    const isModpack = item.type === 'modpack';
-    const typeLabel = isModpack ? '.DCEPACK' : '.CFG';
-    const typeClass = isModpack ? 'badge-flame' : 'badge-green';
-
-    const dateStr = new Date(item.createdAt).toLocaleDateString('es-ES', {
-      year: 'numeric', month: 'short', day: 'numeric'
-    });
-
-    card.innerHTML = `
-      <div class="community-card-header">
-        <div class="comm-badge-row">
-          <span class="badge ${typeClass}">${typeLabel}</span>
-          <span class="comm-version-badge">${escapeHtml(item.version)}</span>
-          <span class="comm-cat-badge">${escapeHtml(item.category)}</span>
-          <span class="comm-security-badge"><i class="fas fa-shield-check"></i> Seguro</span>
-        </div>
-        <h4 class="comm-card-title">${escapeHtml(item.title)}</h4>
-        
-        <!-- Author Profile Link (Opens Steam in new tab) -->
-        <div class="comm-card-author">
-          <img src="${item.authorAvatar || 'icono.png'}" class="author-micro-avatar" alt="Avatar" />
-          <span class="author-label">Creador:</span>
-          <a href="${item.authorSteamUrl}" target="_blank" rel="noopener noreferrer" class="author-steam-link" title="Abrir perfil oficial de Steam en nueva pestaña">
-            <i class="fab fa-steam"></i>
-            <strong>${escapeHtml(item.authorName)}</strong>
-          </a>
-        </div>
-      </div>
-
-      <p class="comm-card-desc">${escapeHtml(item.description)}</p>
-
-      <div class="comm-card-meta">
-        <span><i class="fas fa-file-code"></i> ${escapeHtml(item.fileName)}</span>
-        <span><i class="fas fa-weight-hanging"></i> ${formatBytes(item.fileSize)}</span>
-        <span><i class="fas fa-calendar-alt"></i> ${dateStr}</span>
-      </div>
-
-      <div class="comm-card-actions">
-        <button class="btn btn-primary btn-sm btn-comm-download" data-id="${item.id}" title="Descarga directa inmediata sin intermediarios">
-          <i class="fas fa-download"></i> <span>Descargar (${formatBytes(item.fileSize)})</span>
-        </button>
-        ${isMyPost ? `
-          <button class="btn btn-outline-danger btn-sm btn-comm-delete" data-id="${item.id}">
-            <i class="fas fa-trash-alt"></i> <span>Eliminar Publicación</span>
-          </button>
-        ` : ''}
-      </div>
-    `;
-
-    // Download Button Action
-    const dlBtn = card.querySelector('.btn-comm-download');
-    if (dlBtn) {
-      dlBtn.addEventListener('click', () => triggerFileDownload(item));
-    }
-
-    // Delete Button Action (In My Posts)
-    const delBtn = card.querySelector('.btn-comm-delete');
-    if (delBtn) {
-      delBtn.addEventListener('click', async () => {
-        if (confirm(`¿Estás seguro de eliminar "${item.title}" de tus publicaciones?`)) {
-          await dbDeletePublication(item.id);
-          showCommToast('Publicación eliminada con éxito.', 'ok');
-          await refreshView();
-        }
-      });
-    }
-
+    const card = createCardElement(item, isMyPost);
     grid.appendChild(card);
   });
+}
+
+function createCardElement(item, isMyPost) {
+  const card = document.createElement('div');
+  card.className = 'community-card';
+
+  const isModpack = item.type === 'modpack';
+  const typeLabel = isModpack ? '.DCEPACK' : '.CFG';
+  const typeClass = isModpack ? 'badge-flame' : 'badge-green';
+
+  const dateStr = new Date(item.createdAt).toLocaleDateString('es-ES', {
+    year: 'numeric', month: 'short', day: 'numeric'
+  });
+
+  card.innerHTML = `
+    <div class="community-card-header">
+      <div class="comm-badge-row">
+        <span class="badge ${typeClass}">${typeLabel}</span>
+        <span class="comm-version-badge">${escapeHtml(item.version)}</span>
+        <span class="comm-cat-badge">${escapeHtml(item.category)}</span>
+        <span class="comm-security-badge"><i class="fas fa-shield-check"></i> Seguro</span>
+      </div>
+      <h4 class="comm-card-title">${escapeHtml(item.title)}</h4>
+      
+      <!-- Author Profile Link (Opens Steam in new tab) -->
+      <div class="comm-card-author">
+        <img src="${item.authorAvatar || 'icono.png'}" class="author-micro-avatar" alt="Avatar" />
+        <span class="author-label">Creador:</span>
+        <a href="${item.authorSteamUrl}" target="_blank" rel="noopener noreferrer" class="author-steam-link" title="Abrir perfil oficial de Steam en nueva pestaña">
+          <i class="fab fa-steam"></i>
+          <strong>${escapeHtml(item.authorName)}</strong>
+        </a>
+      </div>
+    </div>
+
+    <p class="comm-card-desc">${escapeHtml(item.description)}</p>
+
+    <div class="comm-card-meta">
+      <span><i class="fas fa-file-code"></i> ${escapeHtml(item.fileName)}</span>
+      <span><i class="fas fa-weight-hanging"></i> ${formatBytes(item.fileSize)}</span>
+      <span><i class="fas fa-calendar-alt"></i> ${dateStr}</span>
+    </div>
+
+    <div class="comm-card-actions">
+      <button class="btn btn-primary btn-sm btn-comm-download" data-id="${item.id}" title="Descarga directa inmediata sin intermediarios">
+        <i class="fas fa-download"></i> <span>Descargar (${formatBytes(item.fileSize)})</span>
+      </button>
+      ${isMyPost ? `
+        <button class="btn btn-outline-danger btn-sm btn-comm-delete" data-id="${item.id}">
+          <i class="fas fa-trash-alt"></i> <span>Eliminar Publicación</span>
+        </button>
+      ` : ''}
+    </div>
+  `;
+
+  // Download Button Action
+  const dlBtn = card.querySelector('.btn-comm-download');
+  if (dlBtn) {
+    dlBtn.addEventListener('click', () => triggerFileDownload(item));
+  }
+
+  // Delete Button Action (In My Posts)
+  const delBtn = card.querySelector('.btn-comm-delete');
+  if (delBtn) {
+    delBtn.addEventListener('click', async () => {
+      if (confirm(`¿Estás seguro de eliminar "${item.title}" de tus publicaciones?`)) {
+        await dbDeletePublication(item.id);
+        showCommToast('Publicación eliminada con éxito.', 'ok');
+        await refreshView();
+      }
+    });
+  }
+
+  return card;
 }
 
 function triggerFileDownload(item) {
