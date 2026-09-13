@@ -6,7 +6,7 @@
   <title>DCE Community Hub — Modpacks & Autoexecs para Left 4 Dead 2 Versus</title>
   
   <!-- SEO & Social Meta Tags -->
-  <meta name="description" content="Comunidad oficial de DCE Mods Loader. Publica y descarga modpacks persistentes (.dcepack) y configuraciones autoexec (.cfg) con perfiles de creadores verificados en Steam." />
+  <meta name="description" content="Comunidad oficial de DCE Mods Loader. Publica y descarga modpacks (.dcepack) y configuraciones autoexec (.cfg) con perfiles de creadores verificados en Steam." />
   <meta name="keywords" content="Left 4 Dead 2, L4D2 Versus, DCE Community, Modpacks, Autoexec CFG, Steam Workshop, DCE Studios" />
   <meta name="author" content="DCE STUDIOS" />
   <meta property="og:title" content="DCE Community Hub — Modpacks & Autoexecs para L4D2 Versus" />
@@ -83,7 +83,7 @@
           DCE <span class="text-gradient">Community Hub</span>
         </h1>
         <p class="comm-hero-desc">
-          Plataforma abierta para compartir y descargar <strong>Modpacks persistentes (.dcepack)</strong> y <strong>Autoexecs competitivos (.cfg)</strong>. Sube tus creaciones con tu perfil oficial de Steam y descárgalas al instante en tu equipo.
+          Plataforma abierta para compartir y descargar <strong>Modpacks (.dcepack)</strong> y <strong>Autoexecs competitivos (.cfg)</strong>. Sube tus creaciones con tu perfil oficial de Steam y descárgalas al instante en tu equipo.
         </p>
 
         <!-- Stats Bar -->
@@ -166,6 +166,8 @@
           <!-- Category Chips -->
           <div class="comm-chips-wrapper" id="comm-chips-wrapper">
             <button class="comm-chip active" data-filter="all">Todos</button>
+            <button class="comm-chip" data-filter="Persistente">💾 Persistente</button>
+            <button class="comm-chip" data-filter="Normal">📦 Normal</button>
             <button class="comm-chip" data-filter="Competitivo">Competitivo</button>
             <button class="comm-chip" data-filter="FPS Boost">FPS Boost</button>
             <button class="comm-chip" data-filter="Armas">Armas</button>
@@ -185,7 +187,7 @@
               <div class="section-box-title">
                 <span class="section-box-icon flame-icon"><i class="fas fa-box-open"></i></span>
                 <div>
-                  <h3>Modpacks Persistentes (.dcepack)</h3>
+                  <h3>Modpacks (.dcepack)</h3>
                   <p>Colecciones integrales de addons, armas y skins adaptadas para Versus sin baneo VAC</p>
                 </div>
               </div>
@@ -394,6 +396,15 @@
               <!-- Filled via JS with Steam info -->
             </div>
           </div>
+        </div>
+
+        <div class="form-group" id="group-modpack-mode">
+          <label class="form-label" for="pub-modpack-mode">Tipo de Modpack:</label>
+          <select id="pub-modpack-mode" class="form-input select-input">
+            <option value="Persistente">💾 Modpack Persistente (Almacén local dce_storage - 100% autónomo sin Workshop)</option>
+            <option value="Normal">📦 Modpack Normal (Depende de suscripciones activas en Steam Workshop)</option>
+          </select>
+          <span class="form-hint">Indica si los mods se guardan de forma permanente en la app o si requieren suscripción en Steam.</span>
         </div>
 
         <div class="form-group">

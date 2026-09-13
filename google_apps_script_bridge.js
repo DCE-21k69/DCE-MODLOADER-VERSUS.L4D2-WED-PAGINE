@@ -93,6 +93,35 @@ function doPost(e) {
     }
 
     const postData = JSON.parse(e.postData.contents);
+
+    // Si la solicitud es para eliminar un archivo de Google Drive
+    if (postData.action === 'delete' || postData.action === 'trash') {
+      const fileId = postData.fileId;
+      if (!fileId) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'error',
+          message: 'No se recibió fileId para eliminar.'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      try {
+        const fileToDelete = DriveApp.getFileById(fileId);
+        fileToDelete.setTrashed(true);
+        Logger.log("✅ Archivo enviado a la papelera en Google Drive: " + fileId);
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'success',
+          fileId: fileId,
+          message: 'Archivo eliminado de Google Drive correctamente.'
+        })).setMimeType(ContentService.MimeType.JSON);
+      } catch (delErr) {
+        Logger.log("⚠️ Error al eliminar archivo (" + fileId + "): " + delErr);
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'error',
+          message: 'No se pudo eliminar el archivo de Google Drive: ' + delErr.toString()
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
     const type = postData.type || postData.fileType || 'modpack';
     const fileName = postData.fileName || ('dce_' + Date.now() + (type === 'modpack' ? '.dcepack' : '.cfg'));
     const base64Data = postData.fileData;
@@ -175,6 +204,24 @@ function doPost(e) {
  * Manejador GET: Diagnóstico en vivo de conexión con Google Drive
  */
 function doGet(e) {
+  // Soporte de eliminación mediante GET
+  if (e && e.parameter && (e.parameter.action === 'delete' || e.parameter.action === 'trash') && e.parameter.fileId) {
+    try {
+      const fileToDelete = DriveApp.getFileById(e.parameter.fileId);
+      fileToDelete.setTrashed(true);
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'success',
+        fileId: e.parameter.fileId,
+        message: 'Archivo eliminado de Google Drive correctamente.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    } catch (delErr) {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        message: 'Error al eliminar archivo: ' + delErr.toString()
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
   const diag = {
     status: 'online',
     service: 'DCE Community Drive Bridge (5TB Pro)',

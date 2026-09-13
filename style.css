@@ -2763,6 +2763,29 @@ a {
   margin-bottom: 12px;
 }
 
+.comm-mode-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comm-mode-badge.badge-persistente {
+  background: rgba(255, 106, 0, 0.16);
+  color: var(--flame-gold);
+  border: 1px solid rgba(255, 157, 0, 0.45);
+  box-shadow: 0 0 8px rgba(255, 106, 0, 0.2);
+}
+
+.comm-mode-badge.badge-normal {
+  background: rgba(102, 192, 244, 0.14);
+  color: #66c0f4;
+  border: 1px solid rgba(102, 192, 244, 0.35);
+}
+
 .comm-version-badge {
   font-size: 0.72rem;
   font-weight: 700;

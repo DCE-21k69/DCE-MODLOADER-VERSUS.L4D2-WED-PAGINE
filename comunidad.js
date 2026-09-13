@@ -369,6 +369,7 @@ function setPublishType(type) {
   const dropzoneHint = document.getElementById('dropzone-hint');
 
   typeInput.value = type;
+  const groupModpackMode = document.getElementById('group-modpack-mode');
 
   if (type === 'modpack') {
     btnModpack.classList.add('active');
@@ -376,12 +377,14 @@ function setPublishType(type) {
     fileLabel.textContent = 'Archivo del Modpack (.dcepack o .zip):';
     fileInput.accept = '.dcepack,.zip';
     dropzoneHint.textContent = 'Formatos soportados: .dcepack, .zip';
+    if (groupModpackMode) groupModpackMode.style.display = 'block';
   } else {
     btnAutoexec.classList.add('active');
     btnModpack.classList.remove('active');
     fileLabel.textContent = 'Archivo de Configuración Autoexec (.cfg):';
     fileInput.accept = '.cfg';
     dropzoneHint.textContent = 'Formato soportado: .cfg';
+    if (groupModpackMode) groupModpackMode.style.display = 'none';
   }
 
   selectedFile = null;
@@ -492,6 +495,7 @@ async function handlePublishSubmit() {
   const title = (document.getElementById('pub-title').value || '').trim();
   const version = (document.getElementById('pub-version').value || 'v1.0').trim();
   const category = document.getElementById('pub-category').value;
+  const modpackMode = (type === 'modpack') ? (document.getElementById('pub-modpack-mode')?.value || 'Normal') : null;
   const description = (document.getElementById('pub-description').value || '').trim();
 
   if (!title || !description) {
@@ -516,6 +520,7 @@ async function handlePublishSubmit() {
         const base64Data = await fileToBase64(selectedFile);
         const payload = {
           type: type,
+          modpackMode: modpackMode,
           fileName: selectedFile.name,
           fileData: base64Data,
           mimeType: selectedFile.type || 'application/octet-stream',
@@ -548,6 +553,7 @@ async function handlePublishSubmit() {
     const item = {
       id: pubId,
       type: type, // 'modpack' | 'autoexec'
+      modpackMode: modpackMode,
       title: title,
       version: version,
       category: category,
@@ -607,8 +613,14 @@ async function refreshView() {
 
   // 3. Filter function for Search Query & Category Chips
   const filterItem = (item) => {
-    if (currentFilter !== 'all' && item.category !== currentFilter) {
-      return false;
+    if (currentFilter !== 'all') {
+      if (currentFilter === 'Persistente') {
+        if (item.modpackMode !== 'Persistente') return false;
+      } else if (currentFilter === 'Normal') {
+        if (item.modpackMode !== 'Normal') return false;
+      } else if (item.category !== currentFilter) {
+        return false;
+      }
     }
     if (searchQuery) {
       const t = (item.title || '').toLowerCase();
@@ -616,7 +628,8 @@ async function refreshView() {
       const d = (item.description || '').toLowerCase();
       const v = (item.version || '').toLowerCase();
       const c = (item.category || '').toLowerCase();
-      if (!t.includes(searchQuery) && !a.includes(searchQuery) && !d.includes(searchQuery) && !v.includes(searchQuery) && !c.includes(searchQuery)) {
+      const m = (item.modpackMode || '').toLowerCase();
+      if (!t.includes(searchQuery) && !a.includes(searchQuery) && !d.includes(searchQuery) && !v.includes(searchQuery) && !c.includes(searchQuery) && !m.includes(searchQuery)) {
         return false;
       }
     }
@@ -733,6 +746,12 @@ function createCardElement(item, isMyPost) {
   const typeLabel = isModpack ? '.DCEPACK' : '.CFG';
   const typeClass = isModpack ? 'badge-flame' : 'badge-green';
 
+  const modeBadge = isModpack ? (
+    (item.modpackMode === 'Persistente')
+      ? '<span class="comm-mode-badge badge-persistente" title="Almacén persistente local dce_storage (0 MB adicionales)"><i class="fas fa-hard-drive"></i> Persistente</span>'
+      : '<span class="comm-mode-badge badge-normal" title="Requiere suscripciones activas en Steam Workshop"><i class="fab fa-steam"></i> Normal</span>'
+  ) : '';
+
   const dateStr = new Date(item.createdAt).toLocaleDateString('es-ES', {
     year: 'numeric', month: 'short', day: 'numeric'
   });
@@ -741,6 +760,7 @@ function createCardElement(item, isMyPost) {
     <div class="community-card-header">
       <div class="comm-badge-row">
         <span class="badge ${typeClass}">${typeLabel}</span>
+        ${modeBadge}
         <span class="comm-version-badge">${escapeHtml(item.version)}</span>
         <span class="comm-cat-badge">${escapeHtml(item.category)}</span>
         <span class="comm-security-badge"><i class="fas fa-shield-check"></i> Seguro</span>
@@ -788,9 +808,32 @@ function createCardElement(item, isMyPost) {
   const delBtn = card.querySelector('.btn-comm-delete');
   if (delBtn) {
     delBtn.addEventListener('click', async () => {
-      if (confirm(`¿Estás seguro de eliminar "${item.title}" de tus publicaciones?`)) {
+      if (confirm(`¿Estás seguro de eliminar "${item.title}"? Esta acción también lo borrará de Google Drive.`)) {
+        delBtn.disabled = true;
+        delBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando de Drive...';
+
+        // 1. Borrar de Google Drive si tiene archivo asociado
+        const fileIdToDelete = item.driveFileId || (item.driveDownloadUrl ? (item.driveDownloadUrl.match(/id=([a-zA-Z0-9_-]+)/) || [])[1] : null);
+
+        if (fileIdToDelete && GOOGLE_DRIVE_BRIDGE_ENDPOINT && GOOGLE_DRIVE_BRIDGE_ENDPOINT.startsWith('http')) {
+          try {
+            await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'delete',
+                fileId: fileIdToDelete
+              })
+            });
+            console.log('[DCE Drive Bridge] Archivo eliminado en Google Drive:', fileIdToDelete);
+          } catch (delDriveErr) {
+            console.warn('[DCE Drive Bridge] Error al solicitar eliminación en Google Drive:', delDriveErr);
+          }
+        }
+
+        // 2. Borrar de base de datos local
         await dbDeletePublication(item.id);
-        showCommToast('Publicación eliminada con éxito.', 'ok');
+        showCommToast('Publicación y archivo de Google Drive eliminados con éxito.', 'ok');
         await refreshView();
       }
     });
