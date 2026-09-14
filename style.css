@@ -3329,3 +3329,152 @@ a {
     flex-direction: column;
   }
 }
+
+/* ==============================================================================
+   SUPPORT & DISCORD SECTION
+   ============================================================================== */
+.btn-discord {
+  background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+  color: #ffffff;
+  border: 1.5px solid rgba(88, 101, 242, 0.6);
+  box-shadow: 0 8px 24px rgba(88, 101, 242, 0.4), 0 0 15px rgba(88, 101, 242, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.btn-discord:hover {
+  background: linear-gradient(135deg, #4752C4 0%, #3c45a5 100%);
+  color: #ffffff;
+  border-color: #5865F2;
+  box-shadow: 0 12px 30px rgba(88, 101, 242, 0.65);
+  transform: translateY(-3px);
+}
+
+.support-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.support-card {
+  background: var(--surface);
+  border: 1.5px solid rgba(88, 101, 242, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(88, 101, 242, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.support-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #5865F2, #F59E0B, #5865F2);
+}
+
+.support-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.support-discord-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #5865F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+  flex-shrink: 0;
+}
+
+.support-card-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.support-card-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+}
+
+.support-rule-box {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-md);
+  padding: 22px 20px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.support-rule-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #F59E0B;
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.support-rule-question {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.support-role-highlight {
+  background: rgba(16, 185, 129, 0.12);
+  border: 2px solid #10B981;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  color: #10B981;
+  font-size: 1.05rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  user-select: all;
+  margin: 10px 0;
+}
+
+.support-rule-note {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 10px;
+  line-height: 1.45;
+}
+
+.support-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .support-actions-row .btn {
+    width: 100%;
+  }
+}
