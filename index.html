@@ -57,13 +57,22 @@
         <ul class="nav-links" id="nav-links">
           <li><a href="#hero" class="nav-link active">Inicio</a></li>
           <li><a href="#caracteristicas" class="nav-link">Características</a></li>
-          <li><a href="#guia" class="nav-link">Guía de Uso</a></li>
-          <li><a href="#comparativa" class="nav-link">Comparativa</a></li>
           <li><a href="#descargas" class="nav-link">Descargas</a></li>
           <li><a href="#desarrollador" class="nav-link">Desarrollador</a></li>
-          <li><a href="comunidad.html" class="nav-link nav-link-community"><i class="fas fa-users"></i> Comunidad Hub</a></li>
-          <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <li><a href="comunidad.html" class="nav-link nav-link-community"><i class="fas fa-users"></i> Comunidad</a></li>
           <li><a href="#soporte" class="nav-link"><i class="fab fa-discord"></i> Soporte</a></li>
+          <!-- Dropdown "Más" -->
+          <li class="nav-dropdown">
+            <button class="nav-dropdown-btn" aria-expanded="false" aria-haspopup="true">
+              Más <i class="fas fa-chevron-down nav-dropdown-arrow"></i>
+            </button>
+            <ul class="nav-dropdown-menu">
+              <li><a href="#guia" class="nav-link"><i class="fas fa-book-open"></i> Guía de Uso</a></li>
+              <li><a href="#comparativa" class="nav-link"><i class="fas fa-chart-bar"></i> Comparativa</a></li>
+              <li><a href="#faq" class="nav-link"><i class="fas fa-circle-question"></i> FAQ</a></li>
+            </ul>
+          </li>
+          <!-- Mobile-only actions -->
           <li class="mobile-only-action">
             <a href="comunidad.html" class="btn btn-secondary btn-sm" style="width: 100%;">
               <i class="fas fa-users"></i> <span>Comunidad Hub</span>
@@ -84,9 +93,17 @@
               <i class="fab fa-steam"></i> <span>Steam del Creador</span>
             </a>
           </li>
+          <li class="mobile-only-action">
+            <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="btn btn-paypal btn-sm" style="width: 100%;">
+              <i class="fab fa-paypal"></i> <span>Donar con PayPal</span>
+            </a>
+          </li>
         </ul>
 
         <div class="nav-actions">
+          <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="btn btn-paypal btn-sm nav-btn-desktop" title="Apoyar el proyecto — Donar con PayPal">
+            <i class="fab fa-paypal"></i> <span>Donar</span>
+          </a>
           <a href="https://dcegaming.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm nav-btn-desktop">
             <i class="fas fa-globe"></i> <span>DCE Studios</span>
           </a>
@@ -886,6 +903,53 @@
     </section>
 
     <!-- ==============================================================================
+         DONACIONES & APOYO AL PROYECTO
+         ============================================================================== -->
+    <section class="section" id="donaciones">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-tag"><i class="fab fa-paypal"></i> Apoya el Proyecto</span>
+          <h2 class="section-title">¿Te Gusta la App? <span class="text-gradient">Apoya al Creador</span></h2>
+          <p class="section-desc">
+            DCE Mods Loader es un proyecto 100% gratuito, independiente y de código abierto. Si te ha sido útil y quieres que siga creciendo con nuevas funciones, cualquier donación voluntaria ayuda enormemente.
+          </p>
+        </div>
+
+        <div class="donate-container">
+          <div class="donate-card">
+
+            <div class="donate-icon-circle">
+              <i class="fab fa-paypal"></i>
+            </div>
+
+            <div>
+              <h3 class="donate-card-title">Donación Voluntaria — DCE STUDIOS</h3>
+              <p class="donate-card-desc">
+                Tu apoyo financia el desarrollo continuo, nuevas características, soporte multiplataforma y el mantenimiento del servidor. No hay recompensas prometidas — solo gratitud genuina y más horas de desarrollo.
+              </p>
+            </div>
+
+            <div class="donate-actions">
+              <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="btn btn-paypal btn-lg">
+                <i class="fab fa-paypal"></i>
+                <span>Donar con PayPal</span>
+              </a>
+              <a href="#soporte" class="btn btn-secondary btn-lg">
+                <i class="fab fa-discord"></i>
+                <span>Soporte en Discord</span>
+              </a>
+            </div>
+
+            <p class="donate-note"><i class="fas fa-heart" style="color:#F59E0B;"></i> 100% voluntario · Seguro vía PayPal · Gracias por tu confianza ❤️</p>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
          SOPORTE & DISCORD SECTION
          ============================================================================== -->
     <section class="section" id="soporte">
@@ -973,6 +1037,7 @@
               <li><a href="#descargas">Descargas</a></li>
               <li><a href="#desarrollador">Desarrollador</a></li>
               <li><a href="comunidad.html">Comunidad Hub (Página Dedicada)</a></li>
+              <li><a href="#donaciones"><i class="fab fa-paypal"></i> Donar al Proyecto</a></li>
               <li><a href="#soporte"><i class="fab fa-discord"></i> Soporte Discord</a></li>
               <li><a href="#faq">FAQ</a></li>
             </ul>
@@ -994,6 +1059,7 @@
               <li><a href="https://dcegaming.netlify.app/" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> Web Oficial</a></li>
               <li><a href="https://dcegaming.netlify.app/" target="_blank" rel="noopener noreferrer"><i class="fas fa-gamepad"></i> Catálogo de Juegos &amp; Apps</a></li>
               <li><a href="#soporte"><i class="fab fa-discord"></i> Soporte &amp; Comunidad</a></li>
+              <li><a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer"><i class="fab fa-paypal"></i> Apoyar con Donación</a></li>
             </ul>
           </div>
         </div>

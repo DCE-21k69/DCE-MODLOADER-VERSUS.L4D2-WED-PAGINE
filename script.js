@@ -82,6 +82,36 @@ function initNavbar() {
       }
     });
   }
+
+  // Dropdown "Más"
+  const dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(dropdown => {
+    const btn = dropdown.querySelector('.nav-dropdown-btn');
+    if (!btn) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.contains('open');
+      // Close all other dropdowns
+      dropdowns.forEach(d => d.classList.remove('open'));
+      if (!isOpen) dropdown.classList.add('open');
+      btn.setAttribute('aria-expanded', !isOpen);
+    });
+    // Close when a menu link is clicked
+    dropdown.querySelectorAll('.nav-dropdown-menu a').forEach(a => {
+      a.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  });
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', () => {
+    dropdowns.forEach(d => {
+      d.classList.remove('open');
+      const b = d.querySelector('.nav-dropdown-btn');
+      if (b) b.setAttribute('aria-expanded', 'false');
+    });
+  });
 }
 
 /* ==============================================================================
