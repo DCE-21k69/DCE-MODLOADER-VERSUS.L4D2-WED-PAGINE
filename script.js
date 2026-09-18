@@ -31,34 +31,32 @@ function initNavbar() {
   });
 
   if (navToggle && navLinks) {
-    navToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      navLinks.classList.toggle('open');
+    const updateMenuState = (isOpen) => {
+      navLinks.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
       const icon = navToggle.querySelector('i');
       if (icon) {
-        if (navLinks.classList.contains('open')) {
-          icon.className = 'fas fa-times';
-        } else {
-          icon.className = 'fas fa-bars';
-        }
+        icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
       }
+    };
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !navLinks.classList.contains('open');
+      updateMenuState(willOpen);
     });
 
     // Close when clicking ANY link inside drawer
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        const icon = navToggle.querySelector('i');
-        if (icon) icon.className = 'fas fa-bars';
+        updateMenuState(false);
       });
     });
 
     // Close when clicking outside navbar
     document.addEventListener('click', (e) => {
       if (navLinks.classList.contains('open') && !navbar.contains(e.target)) {
-        navLinks.classList.remove('open');
-        const icon = navToggle.querySelector('i');
-        if (icon) icon.className = 'fas fa-bars';
+        updateMenuState(false);
       }
     });
   }
