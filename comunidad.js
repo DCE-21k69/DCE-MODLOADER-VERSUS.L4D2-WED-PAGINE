@@ -480,6 +480,8 @@ function initDropzone() {
   });
 }
 
+const MAX_UPLOAD_BYTES = 36 * 1024 * 1024; // 36 MB (Límite POST de Google Apps Script con overhead de Base64)
+
 function handleFileSelected(file) {
   const type = document.getElementById('pub-item-type').value;
   const ext = file.name.split('.').pop().toLowerCase();
@@ -507,6 +509,10 @@ function handleFileSelected(file) {
     return;
   }
 
+  if (file.size > MAX_UPLOAD_BYTES) {
+    showCommToast(`⚠️ El archivo pesa ${formatBytes(file.size)}. Supera el límite de subida directa a Google Drive (36 MB). Se recomienda exportar como Modpack Normal (pesa pocos KB).`, 'warn');
+  }
+
   selectedFile = file;
   updateDropzoneDisplay();
 }
@@ -521,7 +527,9 @@ function updateDropzoneDisplay() {
   if (selectedFile) {
     selectedBox.style.display = 'flex';
     nameLabel.textContent = selectedFile.name;
-    sizeLabel.textContent = formatBytes(selectedFile.size);
+    const isTooBig = selectedFile.size > MAX_UPLOAD_BYTES;
+    sizeLabel.textContent = formatBytes(selectedFile.size) + (isTooBig ? ' (Excede límite de 36 MB)' : '');
+    sizeLabel.style.color = isTooBig ? '#ef4444' : 'var(--flame-gold)';
   } else {
     selectedBox.style.display = 'none';
   }
@@ -573,6 +581,11 @@ async function handlePublishSubmit() {
 
   if (!selectedFile) {
     showCommToast('Por favor selecciona el archivo a publicar.', 'warn');
+    return;
+  }
+
+  if (selectedFile.size > MAX_UPLOAD_BYTES) {
+    showCommToast(`⚠️ El archivo pesa ${formatBytes(selectedFile.size)}. El límite máximo para publicar directamente a Google Drive vía web es de 36 MB (restricción de Google Apps Script). Para modpacks con VPKs, expórtalo como Modpack Normal (pesa pocos KB) o compártelo mediante enlace externo.`, 'err');
     return;
   }
 
@@ -673,7 +686,8 @@ async function handlePublishSubmit() {
   } catch (ex) {
     hideUploadProgress();
     console.error('Error al guardar publicación:', ex);
-    showCommToast('Error al procesar el archivo. Revisa los permisos del navegador.', 'err');
+    const detail = (ex && ex.message) ? ex.message : 'Revisa los permisos del navegador o el tamaño del archivo.';
+    showCommToast(`Error al procesar la publicación: ${detail}`, 'err');
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
