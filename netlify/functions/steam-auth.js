@@ -97,7 +97,7 @@ exports.handler = async (event, context) => {
       try {
         const profileRes = await fetch(`https://steamcommunity.com/profiles/${steamId}/?xml=1`, {
           headers: {
-            'User-Agent': 'DCE-Mods-Loader-Community/2.0.5',
+            'User-Agent': 'DCE-Mods-Loader-Community/2.0.6',
           },
         });
 
