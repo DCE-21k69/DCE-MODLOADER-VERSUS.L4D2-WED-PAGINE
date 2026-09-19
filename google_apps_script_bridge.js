@@ -153,6 +153,18 @@ function doPost(e) {
       folder = rootFolder;
     }
 
+    const jsonMeta = JSON.stringify({
+      title: postData.title || fileName,
+      type: type,
+      modpackMode: postData.modpackMode || (type === 'modpack' ? 'Normal' : ''),
+      version: postData.version || "1.0.0",
+      category: postData.category || "General",
+      authorName: postData.authorName || "Comunidad DCE",
+      authorSteamId: postData.authorSteamId || "N/A",
+      authorSteamUrl: postData.authorSteamUrl || "",
+      authorAvatar: postData.authorAvatar || ""
+    });
+
     // Metadatos descriptivos
     const metaDesc = [
       "DCE MODS LOADER — Comunidad L4D2 Versus",
@@ -161,7 +173,8 @@ function doPost(e) {
       "Versión: " + (postData.version || "1.0.0"),
       "Categoría: " + (postData.category || "General"),
       "Autor: " + (postData.authorName || "Comunidad DCE") + " (Steam: " + (postData.authorSteamId || "N/A") + ")",
-      "Fecha: " + new Date().toISOString()
+      "Fecha: " + new Date().toISOString(),
+      "JSON_META:" + jsonMeta
     ].join("\n");
 
     try {
@@ -201,7 +214,83 @@ function doPost(e) {
 }
 
 /**
- * Manejador GET: Diagnóstico en vivo de conexión con Google Drive
+ * Función auxiliar para listar publicaciones desde una carpeta de Google Drive
+ */
+function listFolderPublications(folder, defaultType) {
+  const list = [];
+  if (!folder) return list;
+  try {
+    const files = folder.getFiles();
+    let count = 0;
+    while (files.hasNext() && count < 80) {
+      const f = files.next();
+      if (f.isTrashed()) continue;
+      count++;
+      const fId = f.getId();
+      const desc = f.getDescription() || '';
+
+      let title = f.getName();
+      let type = defaultType;
+      let version = "1.0.0";
+      let category = "General";
+      let author = "Comunidad DCE";
+      let authorSteamId = "";
+      let authorSteamUrl = "";
+      let authorAvatar = "";
+      let modpackMode = (defaultType === 'modpack' ? 'Normal' : '');
+
+      const lines = desc.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith("JSON_META:")) {
+          try {
+            const j = JSON.parse(line.substring(10).trim());
+            if (j.title) title = j.title;
+            if (j.type) type = j.type;
+            if (j.version) version = j.version;
+            if (j.category) category = j.category;
+            if (j.modpackMode) modpackMode = j.modpackMode;
+            if (j.authorName) author = j.authorName;
+            if (j.authorSteamId) authorSteamId = j.authorSteamId;
+            if (j.authorSteamUrl) authorSteamUrl = j.authorSteamUrl;
+            if (j.authorAvatar) authorAvatar = j.authorAvatar;
+          } catch (e) {}
+        } else if (line.startsWith("Título: ")) {
+          title = line.substring(8).trim();
+        } else if (line.startsWith("Versión: ")) {
+          version = line.substring(9).trim();
+        } else if (line.startsWith("Categoría: ")) {
+          category = line.substring(11).trim();
+        }
+      }
+
+      list.push({
+        id: 'gdrive_' + fId,
+        type: type,
+        modpackMode: modpackMode,
+        title: title,
+        version: version,
+        category: category,
+        description: desc.split("JSON_META:")[0].trim(),
+        authorName: author,
+        authorSteamId: authorSteamId,
+        authorSteamUrl: authorSteamUrl,
+        authorAvatar: authorAvatar,
+        fileName: f.getName(),
+        fileSize: f.getSize(),
+        driveDownloadUrl: "https://drive.google.com/uc?export=download&id=" + fId,
+        driveFileId: fId,
+        createdAt: f.getDateCreated().toISOString()
+      });
+    }
+  } catch (err) {
+    Logger.log("Error listando carpeta: " + err);
+  }
+  return list;
+}
+
+/**
+ * Manejador GET: Lista publicaciones de la comunidad o ejecuta diagnóstico
  */
 function doGet(e) {
   // Soporte de eliminación mediante GET
@@ -222,34 +311,57 @@ function doGet(e) {
     }
   }
 
-  const diag = {
-    status: 'online',
-    service: 'DCE Community Drive Bridge (5TB Pro)',
-    timestamp: new Date().toISOString(),
-    diagnostico: {}
-  };
+  // Diagnóstico explícito si se solicita
+  if (e && e.parameter && e.parameter.action === 'diag') {
+    const diag = {
+      status: 'online',
+      service: 'DCE Community Drive Bridge (5TB Pro)',
+      timestamp: new Date().toISOString(),
+      diagnostico: {}
+    };
 
-  try {
-    const root = DriveApp.getRootFolder();
-    diag.diagnostico.accesoDrive = "OK - Mi Unidad: " + root.getName();
-  } catch (err) {
-    diag.diagnostico.accesoDrive = "ERROR: " + err.toString();
+    try {
+      const root = DriveApp.getRootFolder();
+      diag.diagnostico.accesoDrive = "OK - Mi Unidad: " + root.getName();
+    } catch (err) {
+      diag.diagnostico.accesoDrive = "ERROR: " + err.toString();
+    }
+
+    try {
+      const f1 = DriveApp.getFolderById(FOLDER_MODPACKS_ID);
+      diag.diagnostico.carpetaModpacks = "OK - " + f1.getName();
+    } catch (err) {
+      diag.diagnostico.carpetaModpacks = "ERROR: " + err.toString();
+    }
+
+    try {
+      const f2 = DriveApp.getFolderById(FOLDER_AUTOEXECS_ID);
+      diag.diagnostico.carpetaAutoexecs = "OK - " + f2.getName();
+    } catch (err) {
+      diag.diagnostico.carpetaAutoexecs = "ERROR: " + err.toString();
+    }
+
+    return ContentService.createTextOutput(JSON.stringify(diag, null, 2))
+      .setMimeType(ContentService.MimeType.JSON);
   }
 
+  // Por defecto (o con action=list): Devolver todas las publicaciones públicas de Google Drive
   try {
-    const f1 = DriveApp.getFolderById(FOLDER_MODPACKS_ID);
-    diag.diagnostico.carpetaModpacks = "OK - " + f1.getName();
-  } catch (err) {
-    diag.diagnostico.carpetaModpacks = "ERROR: " + err.toString();
-  }
+    const modpacks = listFolderPublications(getTargetFolder('modpack'), 'modpack');
+    const autoexecs = listFolderPublications(getTargetFolder('autoexec'), 'autoexec');
+    const combined = modpacks.concat(autoexecs);
 
-  try {
-    const f2 = DriveApp.getFolderById(FOLDER_AUTOEXECS_ID);
-    diag.diagnostico.carpetaAutoexecs = "OK - " + f2.getName();
-  } catch (err) {
-    diag.diagnostico.carpetaAutoexecs = "ERROR: " + err.toString();
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      service: 'DCE Community Drive Bridge (5TB Pro)',
+      count: combined.length,
+      timestamp: new Date().toISOString(),
+      publications: combined
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch (listErr) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: 'Error al listar publicaciones: ' + listErr.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
   }
-
-  return ContentService.createTextOutput(JSON.stringify(diag, null, 2))
-    .setMimeType(ContentService.MimeType.JSON);
 }

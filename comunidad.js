@@ -31,6 +31,8 @@ let currentFilter = 'all';
 let searchQuery = '';
 let selectedFile = null;
 
+let memoryPublications = [];
+
 document.addEventListener('DOMContentLoaded', async () => {
   await initDB();
   initSteamAuth();
@@ -39,6 +41,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   initModals();
   initDropzone();
   await refreshView();
+  syncRemotePublications();
+  setInterval(syncRemotePublications, 45000);
 });
 
 /* ==============================================================================
@@ -65,42 +69,95 @@ function initDB() {
 
     request.onerror = (e) => {
       console.error('Error al inicializar IndexedDB:', e);
-      reject(e);
+      resolve(null);
     };
   });
 }
 
 function dbSavePublication(item) {
-  return new Promise((resolve, reject) => {
-    if (!db) return reject('Database not initialized');
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    const store = tx.objectStore(STORE_NAME);
-    const req = store.put(item);
-    req.onsuccess = () => resolve(true);
-    req.onerror = (e) => reject(e);
+  // 1. Actualizar memoria inmediatamente para respuesta en tiempo real
+  const existingIdx = memoryPublications.findIndex(p => p.id === item.id);
+  if (existingIdx >= 0) {
+    memoryPublications[existingIdx] = item;
+  } else {
+    memoryPublications.unshift(item);
+  }
+
+  return new Promise((resolve) => {
+    if (!db) return resolve(true);
+    try {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.put(item);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(true);
+    } catch (e) {
+      resolve(true);
+    }
   });
 }
 
 function dbGetAllPublications() {
-  return new Promise((resolve, reject) => {
-    if (!db) return reject('Database not initialized');
-    const tx = db.transaction(STORE_NAME, 'readonly');
-    const store = tx.objectStore(STORE_NAME);
-    const req = store.getAll();
-    req.onsuccess = () => resolve(req.result || []);
-    req.onerror = (e) => reject(e);
+  return new Promise((resolve) => {
+    if (!db) return resolve(memoryPublications);
+    try {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.getAll();
+      req.onsuccess = () => {
+        const dbItems = req.result || [];
+        const map = new Map();
+        for (const item of memoryPublications) {
+          if (item && item.id) map.set(item.id, item);
+        }
+        for (const item of dbItems) {
+          if (item && item.id) map.set(item.id, item);
+        }
+        memoryPublications = Array.from(map.values());
+        resolve(memoryPublications);
+      };
+      req.onerror = () => resolve(memoryPublications);
+    } catch (e) {
+      resolve(memoryPublications);
+    }
   });
 }
 
 function dbDeletePublication(id) {
-  return new Promise((resolve, reject) => {
-    if (!db) return reject('Database not initialized');
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    const store = tx.objectStore(STORE_NAME);
-    const req = store.delete(id);
-    req.onsuccess = () => resolve(true);
-    req.onerror = (e) => reject(e);
+  memoryPublications = memoryPublications.filter(p => p.id !== id);
+  return new Promise((resolve) => {
+    if (!db) return resolve(true);
+    try {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.delete(id);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(true);
+    } catch (e) {
+      resolve(true);
+    }
   });
+}
+
+async function syncRemotePublications() {
+  if (!GOOGLE_DRIVE_BRIDGE_ENDPOINT || !GOOGLE_DRIVE_BRIDGE_ENDPOINT.startsWith('http')) return;
+  try {
+    const resp = await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT + '?action=list', {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    });
+    const data = await resp.json();
+    if (data && data.status === 'success' && Array.isArray(data.publications)) {
+      for (const pub of data.publications) {
+        if (pub && pub.id) {
+          await dbSavePublication(pub);
+        }
+      }
+      await refreshView();
+    }
+  } catch (err) {
+    console.warn('[DCE Community Hub] Conexión remota temporalmente no disponible:', err);
+  }
 }
 
 /* ==============================================================================
@@ -478,6 +535,34 @@ function resetPublishForm() {
   setPublishType('modpack');
 }
 
+function showUploadProgress(title, status, percent) {
+  const modal = document.getElementById('modal-upload-progress');
+  const tEl = document.getElementById('upload-progress-title');
+  const sEl = document.getElementById('upload-progress-status');
+  const bEl = document.getElementById('upload-progress-bar');
+  const pEl = document.getElementById('upload-progress-percent');
+  const iEl = document.getElementById('upload-progress-icon');
+  if (modal) modal.style.display = 'flex';
+  if (tEl && title) tEl.textContent = title;
+  if (sEl && status) sEl.textContent = status;
+  if (bEl && percent !== undefined) bEl.style.width = percent + '%';
+  if (pEl && percent !== undefined) pEl.textContent = percent + '%';
+  if (iEl) {
+    if (percent === 100) {
+      iEl.className = 'fas fa-check-circle';
+      iEl.style.color = '#22c55e';
+    } else {
+      iEl.className = 'fas fa-cloud-arrow-up fa-bounce';
+      iEl.style.color = 'var(--flame-orange)';
+    }
+  }
+}
+
+function hideUploadProgress() {
+  const modal = document.getElementById('modal-upload-progress');
+  if (modal) modal.style.display = 'none';
+}
+
 async function handlePublishSubmit() {
   const user = getSteamUser();
   if (!user) {
@@ -509,6 +594,9 @@ async function handlePublishSubmit() {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando y Subiendo...';
   }
 
+  showUploadProgress('Publicando en DCE Hub', 'Preparando y analizando archivo...', 15);
+  closePublishModal();
+
   try {
     const pubId = 'dce_pub_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
     let driveDownloadUrl = null;
@@ -517,7 +605,9 @@ async function handlePublishSubmit() {
     // Subida automática a Google Drive Bridge si el endpoint está configurado
     if (GOOGLE_DRIVE_BRIDGE_ENDPOINT && GOOGLE_DRIVE_BRIDGE_ENDPOINT.startsWith('http')) {
       try {
+        showUploadProgress('Publicando en DCE Hub', 'Codificando paquete seguro...', 35);
         const base64Data = await fileToBase64(selectedFile);
+        showUploadProgress('Publicando en DCE Hub', 'Transmitiendo a la nube comunitaria (Google Drive 5TB)...', 65);
         const payload = {
           type: type,
           modpackMode: modpackMode,
@@ -550,6 +640,8 @@ async function handlePublishSubmit() {
       }
     }
 
+    showUploadProgress('Publicando en DCE Hub', 'Finalizando registro de publicación...', 90);
+
     const item = {
       id: pubId,
       type: type, // 'modpack' | 'autoexec'
@@ -571,11 +663,15 @@ async function handlePublishSubmit() {
     };
 
     await dbSavePublication(item);
-    closePublishModal();
+    showUploadProgress('¡Publicación Exitosa!', 'Tu creación ya está disponible para toda la comunidad.', 100);
+    await new Promise(r => setTimeout(r, 800));
+    hideUploadProgress();
+
     const driveNote = driveDownloadUrl ? ' (Sincronizado en tu Google Drive)' : '';
     showCommToast(`🎉 ¡${item.title} publicado con éxito en la comunidad!${driveNote}`, 'ok');
     await refreshView();
   } catch (ex) {
+    hideUploadProgress();
     console.error('Error al guardar publicación:', ex);
     showCommToast('Error al procesar el archivo. Revisa los permisos del navegador.', 'err');
   } finally {
@@ -618,18 +714,22 @@ async function refreshView() {
         if (item.modpackMode !== 'Persistente') return false;
       } else if (currentFilter === 'Normal') {
         if (item.modpackMode !== 'Normal') return false;
-      } else if (item.category !== currentFilter) {
-        return false;
+      } else {
+        const c1 = (item.category || '').toLowerCase();
+        const c2 = currentFilter.toLowerCase();
+        if (!c1.includes(c2) && !c2.includes(c1)) return false;
       }
     }
     if (searchQuery) {
+      const q = searchQuery.toLowerCase();
       const t = (item.title || '').toLowerCase();
       const a = (item.authorName || '').toLowerCase();
       const d = (item.description || '').toLowerCase();
       const v = (item.version || '').toLowerCase();
       const c = (item.category || '').toLowerCase();
       const m = (item.modpackMode || '').toLowerCase();
-      if (!t.includes(searchQuery) && !a.includes(searchQuery) && !d.includes(searchQuery) && !v.includes(searchQuery) && !c.includes(searchQuery) && !m.includes(searchQuery)) {
+      const f = (item.fileName || '').toLowerCase();
+      if (!t.includes(q) && !a.includes(q) && !d.includes(q) && !v.includes(q) && !c.includes(q) && !m.includes(q) && !f.includes(q)) {
         return false;
       }
     }

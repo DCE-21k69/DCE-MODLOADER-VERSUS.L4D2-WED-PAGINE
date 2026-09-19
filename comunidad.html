@@ -451,6 +451,22 @@
     </div>
   </div>
 
+  <!-- Upload Progress Modal -->
+  <div class="comm-modal-backdrop" id="modal-upload-progress" style="display: none; z-index: 10000;">
+    <div class="comm-modal-card" style="max-width: 460px; text-align: center; padding: 2.2rem 1.8rem;">
+      <div style="font-size: 3.2rem; color: var(--flame-orange); margin-bottom: 1.2rem;">
+        <i class="fas fa-cloud-arrow-up fa-bounce" id="upload-progress-icon"></i>
+      </div>
+      <h3 id="upload-progress-title" style="margin-bottom: 0.4rem; font-size: 1.3rem; font-weight: 800;">Subiendo a la Comunidad</h3>
+      <p id="upload-progress-status" style="color: var(--text-dim); font-size: 0.92rem; margin-bottom: 1.5rem;">Preparando archivo...</p>
+      
+      <div style="background: rgba(255,255,255,0.08); border-radius: 999px; height: 10px; overflow: hidden; margin-bottom: 1rem; position: relative;">
+        <div id="upload-progress-bar" style="background: linear-gradient(90deg, var(--flame-orange), #ff7700); width: 10%; height: 100%; border-radius: 999px; transition: width 0.3s ease;"></div>
+      </div>
+      <span id="upload-progress-percent" style="font-weight: 800; font-size: 1rem; color: var(--flame-orange);">10%</span>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="script.js"></script>
   <script src="comunidad.js"></script>
