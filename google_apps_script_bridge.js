@@ -122,6 +122,182 @@ function doPost(e) {
       }
     }
 
+    // ==========================================================================
+    // 1. INICIAR SESIÓN DE SUBIDA RESUMABLE EN GOOGLE DRIVE (Archivos > 20 MB)
+    // ==========================================================================
+    if (postData.action === 'resumable_init') {
+      const type = postData.type || postData.fileType || 'modpack';
+      const fileName = postData.fileName || ('dce_' + Date.now() + (type === 'modpack' ? '.dcepack' : '.cfg'));
+      const fileSize = postData.fileSize || 0;
+      const mimeType = postData.mimeType || 'application/octet-stream';
+      const folder = getTargetFolder(type);
+      const folderId = folder.getId();
+
+      const jsonMeta = JSON.stringify({
+        title: postData.title || fileName,
+        type: type,
+        modpackMode: postData.modpackMode || (type === 'modpack' ? 'Normal' : ''),
+        version: postData.version || "1.0.0",
+        category: postData.category || "General",
+        authorName: postData.authorName || "Comunidad DCE",
+        authorSteamId: postData.authorSteamId || "N/A",
+        authorSteamUrl: postData.authorSteamUrl || "",
+        authorAvatar: postData.authorAvatar || ""
+      });
+
+      const metaDesc = [
+        "DCE MODS LOADER — Comunidad L4D2 Versus",
+        "Título: " + (postData.title || fileName),
+        "Tipo: " + String(type).toUpperCase(),
+        "Versión: " + (postData.version || "1.0.0"),
+        "Categoría: " + (postData.category || "General"),
+        "Autor: " + (postData.authorName || "Comunidad DCE") + " (Steam: " + (postData.authorSteamId || "N/A") + ")",
+        "Fecha: " + new Date().toISOString(),
+        "JSON_META:" + jsonMeta
+      ].join("\n");
+
+      const initUrl = "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true";
+      const token = ScriptApp.getOAuthToken();
+      const initHeaders = {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/json; charset=UTF-8",
+        "X-Upload-Content-Type": mimeType
+      };
+      if (fileSize > 0) {
+        initHeaders["X-Upload-Content-Length"] = fileSize.toString();
+      }
+
+      const initPayload = JSON.stringify({
+        name: fileName,
+        description: metaDesc,
+        parents: [folderId]
+      });
+
+      const initResp = UrlFetchApp.fetch(initUrl, {
+        method: "post",
+        headers: initHeaders,
+        payload: initPayload,
+        muteHttpExceptions: true
+      });
+
+      const code = initResp.getResponseCode();
+      if (code !== 200 && code !== 201) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'error',
+          message: 'Error al iniciar sesión de subida en Google Drive (Código ' + code + '): ' + initResp.getContentText()
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const headers = initResp.getAllHeaders();
+      const sessionUrl = headers["Location"] || headers["location"];
+      if (!sessionUrl) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'error',
+          message: 'No se obtuvo sessionUrl de Google Drive.'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      Logger.log("✅ Sesión resumable iniciada para " + fileName + ": " + sessionUrl);
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'success',
+        sessionUrl: sessionUrl,
+        fileName: fileName,
+        folderName: folder.getName(),
+        folderId: folderId
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ==========================================================================
+    // 2. PROCESAR BLOQUE DE SUBIDA EN GOOGLE DRIVE (Resumable Chunk)
+    // ==========================================================================
+    if (postData.action === 'resumable_chunk') {
+      const sessionUrl = postData.sessionUrl;
+      const contentRange = postData.contentRange;
+      const chunkBase64 = postData.chunkData;
+
+      if (!sessionUrl || !contentRange || !chunkBase64) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'error',
+          message: 'Faltan parámetros obligatorios (sessionUrl, contentRange o chunkData).'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const chunkBytes = Utilities.base64Decode(chunkBase64);
+      const chunkBlob = Utilities.newBlob(chunkBytes, 'application/octet-stream');
+      const token = ScriptApp.getOAuthToken();
+
+      const chunkResp = UrlFetchApp.fetch(sessionUrl, {
+        method: "put",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Range": contentRange,
+          "Content-Length": chunkBytes.length.toString()
+        },
+        payload: chunkBlob,
+        muteHttpExceptions: true
+      });
+
+      const code = chunkResp.getResponseCode();
+      const respText = chunkResp.getContentText();
+
+      // Código 308 (Resume Incomplete): Bloque recibido con éxito, faltan más bloques
+      if (code === 308) {
+        const respHeaders = chunkResp.getAllHeaders();
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'resume',
+          code: 308,
+          range: respHeaders["Range"] || respHeaders["range"] || ""
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      // Código 200 o 201: ¡Subida completada al 100%!
+      if (code === 200 || code === 201) {
+        let fileId = null;
+        let createdFileName = postData.fileName || 'dce_pack';
+        try {
+          const fileData = JSON.parse(respText);
+          fileId = fileData.id;
+          if (fileData.name) createdFileName = fileData.name;
+        } catch (parseErr) {
+          Logger.log("Aviso parseando respuesta final de Drive: " + parseErr);
+        }
+
+        if (fileId) {
+          try {
+            const createdFile = DriveApp.getFileById(fileId);
+            createdFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          } catch (shareErr) {
+            Logger.log("Aviso configurando permisos públicos: " + shareErr);
+          }
+        }
+
+        const directDownloadUrl = fileId ? ("https://drive.google.com/uc?export=download&id=" + fileId) : "";
+
+        Logger.log("🎉 Archivo completado en Google Drive: " + fileId + " (" + createdFileName + ")");
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'success',
+          completed: true,
+          fileId: fileId,
+          fileName: createdFileName,
+          fileSize: postData.fileSize || (fileId ? DriveApp.getFileById(fileId).getSize() : 0),
+          directDownloadUrl: directDownloadUrl,
+          viewUrl: fileId ? ("https://drive.google.com/file/d/" + fileId + "/view") : "",
+          message: '¡Archivo subido y verificado con éxito en tu Google Drive!'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      // Si Google responde un error inesperado
+      Logger.log("⚠️ Error en bloque (" + code + "): " + respText);
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        code: code,
+        message: 'Error en subida de bloque Google Drive (' + code + '): ' + respText
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ==========================================================================
+    // 3. SUBIDA TRADICIONAL DE UN SOLO GOLPE (Archivos pequeños <= 20 MB)
+    // ==========================================================================
     const type = postData.type || postData.fileType || 'modpack';
     const fileName = postData.fileName || ('dce_' + Date.now() + (type === 'modpack' ? '.dcepack' : '.cfg'));
     const base64Data = postData.fileData;

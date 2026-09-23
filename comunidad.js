@@ -480,7 +480,8 @@ function initDropzone() {
   });
 }
 
-const MAX_UPLOAD_BYTES = 36 * 1024 * 1024; // 36 MB (Límite POST de Google Apps Script con overhead de Base64)
+const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024; // 1 GB (Soporte de modpacks persistentes pesados vía Resumable Chunks)
+const RESUMABLE_THRESHOLD_BYTES = 20 * 1024 * 1024; // 20 MB (a partir de aquí se usa subida por fragmentos)
 
 function handleFileSelected(file) {
   const type = document.getElementById('pub-item-type').value;
@@ -510,7 +511,10 @@ function handleFileSelected(file) {
   }
 
   if (file.size > MAX_UPLOAD_BYTES) {
-    showCommToast(`⚠️ El archivo pesa ${formatBytes(file.size)}. Supera el límite de subida directa a Google Drive (36 MB). Se recomienda exportar como Modpack Normal (pesa pocos KB).`, 'warn');
+    showCommToast(`⚠️ El archivo pesa ${formatBytes(file.size)}. Supera el límite máximo permitido (1 GB).`, 'warn');
+    selectedFile = null;
+    updateDropzoneDisplay();
+    return;
   }
 
   selectedFile = file;
@@ -527,9 +531,10 @@ function updateDropzoneDisplay() {
   if (selectedFile) {
     selectedBox.style.display = 'flex';
     nameLabel.textContent = selectedFile.name;
-    const isTooBig = selectedFile.size > MAX_UPLOAD_BYTES;
-    sizeLabel.textContent = formatBytes(selectedFile.size) + (isTooBig ? ' (Excede límite de 36 MB)' : '');
-    sizeLabel.style.color = isTooBig ? '#ef4444' : 'var(--flame-gold)';
+    const isHeavy = selectedFile.size > RESUMABLE_THRESHOLD_BYTES;
+    const note = isHeavy ? ' • Subida por fragmentos (Resumable)' : '';
+    sizeLabel.textContent = formatBytes(selectedFile.size) + note;
+    sizeLabel.style.color = isHeavy ? 'var(--flame-gold)' : 'var(--text-dim)';
   } else {
     selectedBox.style.display = 'none';
   }
@@ -571,6 +576,140 @@ function hideUploadProgress() {
   if (modal) modal.style.display = 'none';
 }
 
+// Convierte un Blob o Slice a cadena Base64 pura
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        const parts = reader.result.split(',');
+        resolve(parts.length > 1 ? parts[1] : parts[0]);
+      } else {
+        reject(new Error('Error al decodificar fragmento binario'));
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Subida por fragmentos (Resumable Upload) directo a Google Drive 5TB
+async function uploadFileInChunks(file, meta, user) {
+  const CHUNK_SIZE = 8 * 1024 * 1024; // 8 MB (múltiplo exacto de 256 KB)
+  const totalSize = file.size;
+  const totalChunks = Math.ceil(totalSize / CHUNK_SIZE);
+
+  showUploadProgress('Publicando en DCE Hub', 'Iniciando sesión segura en tu Google Drive 5TB...', 5);
+
+  // 1. Iniciar sesión de subida en Google Drive vía Apps Script
+  const initPayload = {
+    action: 'resumable_init',
+    type: meta.type,
+    modpackMode: meta.modpackMode,
+    fileName: file.name,
+    fileSize: totalSize,
+    mimeType: file.type || 'application/octet-stream',
+    title: meta.title,
+    version: meta.version,
+    category: meta.category,
+    description: meta.description,
+    authorName: user.name,
+    authorSteamId: user.steamId,
+    authorSteamUrl: user.profileUrl,
+    authorAvatar: user.avatar
+  };
+
+  const initResp = await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(initPayload)
+  });
+
+  const initData = await initResp.json();
+  if (!initData || initData.status !== 'success' || !initData.sessionUrl) {
+    throw new Error(initData && initData.message ? initData.message : 'No se pudo iniciar la sesión de subida en Google Drive.');
+  }
+
+  const sessionUrl = initData.sessionUrl;
+  console.log('[DCE Resumable] Sesión iniciada con éxito. Total bloques:', totalChunks);
+
+  let finalDriveResult = null;
+
+  // 2. Transmitir bloques secuenciales
+  for (let i = 0; i < totalChunks; i++) {
+    const start = i * CHUNK_SIZE;
+    const end = Math.min(start + CHUNK_SIZE, totalSize);
+    const slice = file.slice(start, end);
+    const contentRange = `bytes ${start}-${end - 1}/${totalSize}`;
+
+    const percent = Math.min(95, Math.round(((start + (end - start) * 0.5) / totalSize) * 100));
+    const sizeFormatted = `${formatBytes(end)} / ${formatBytes(totalSize)}`;
+    showUploadProgress(
+      `Subiendo Modpack Persistente (${formatBytes(totalSize)})`,
+      `Transmitiendo bloque ${i + 1} de ${totalChunks} (${sizeFormatted} • ${percent}%)...`,
+      percent
+    );
+
+    const chunkBase64 = await blobToBase64(slice);
+
+    // Reintentos automáticos por bloque (hasta 3 intentos) ante micro-cortes
+    let chunkSuccess = false;
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const chunkPayload = {
+          action: 'resumable_chunk',
+          sessionUrl: sessionUrl,
+          contentRange: contentRange,
+          chunkData: chunkBase64,
+          fileName: file.name,
+          fileSize: totalSize
+        };
+
+        const chunkResp = await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(chunkPayload)
+        });
+
+        const chunkRes = await chunkResp.json();
+
+        if (chunkRes && (chunkRes.status === 'resume' || (chunkRes.status === 'success' && chunkRes.completed))) {
+          if (chunkRes.completed) {
+            finalDriveResult = chunkRes;
+          }
+          chunkSuccess = true;
+          break; // Éxito con este bloque
+        } else {
+          throw new Error(chunkRes && chunkRes.message ? chunkRes.message : 'Respuesta anómala del bloque.');
+        }
+      } catch (err) {
+        lastError = err;
+        console.warn(`[DCE Resumable] Reintento ${attempt}/3 para bloque ${i + 1}:`, err);
+        if (attempt < 3) {
+          showUploadProgress(
+            `Subiendo Modpack Persistente (${formatBytes(totalSize)})`,
+            `Micro-corte detectado. Reintentando bloque ${i + 1} de ${totalChunks} (intento ${attempt + 1}/3)...`,
+            percent
+          );
+          await new Promise(r => setTimeout(r, 1500 * attempt));
+        }
+      }
+    }
+
+    if (!chunkSuccess) {
+      throw new Error(`Falló la transmisión del bloque ${i + 1}/${totalChunks}: ${lastError ? lastError.message : 'Error de conexión'}`);
+    }
+  }
+
+  if (!finalDriveResult || !finalDriveResult.directDownloadUrl) {
+    throw new Error('La subida de todos los bloques finalizó pero Google Drive no confirmó el enlace final.');
+  }
+
+  return finalDriveResult;
+}
+
 async function handlePublishSubmit() {
   const user = getSteamUser();
   if (!user) {
@@ -585,7 +724,7 @@ async function handlePublishSubmit() {
   }
 
   if (selectedFile.size > MAX_UPLOAD_BYTES) {
-    showCommToast(`⚠️ El archivo pesa ${formatBytes(selectedFile.size)}. El límite máximo para publicar directamente a Google Drive vía web es de 36 MB (restricción de Google Apps Script). Para modpacks con VPKs, expórtalo como Modpack Normal (pesa pocos KB) o compártelo mediante enlace externo.`, 'err');
+    showCommToast(`⚠️ El archivo pesa ${formatBytes(selectedFile.size)}. El límite máximo soportado es de 1 GB.`, 'err');
     return;
   }
 
@@ -617,39 +756,54 @@ async function handlePublishSubmit() {
 
     // Subida automática a Google Drive Bridge si el endpoint está configurado
     if (GOOGLE_DRIVE_BRIDGE_ENDPOINT && GOOGLE_DRIVE_BRIDGE_ENDPOINT.startsWith('http')) {
-      try {
-        showUploadProgress('Publicando en DCE Hub', 'Codificando paquete seguro...', 35);
-        const base64Data = await fileToBase64(selectedFile);
-        showUploadProgress('Publicando en DCE Hub', 'Transmitiendo a la nube comunitaria (Google Drive 5TB)...', 65);
-        const payload = {
-          type: type,
-          modpackMode: modpackMode,
-          fileName: selectedFile.name,
-          fileData: base64Data,
-          mimeType: selectedFile.type || 'application/octet-stream',
-          title: title,
-          version: version,
-          category: category,
-          description: description,
-          authorName: user.name,
-          authorSteamId: user.steamId,
-          authorSteamUrl: user.profileUrl,
-          authorAvatar: user.avatar
-        };
+      const isHeavy = selectedFile.size > RESUMABLE_THRESHOLD_BYTES;
+      const meta = { type, title, version, category, modpackMode, description };
 
-        const resp = await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const driveRes = await resp.json();
-        if (driveRes && driveRes.status === 'success') {
-          driveDownloadUrl = driveRes.directDownloadUrl;
-          driveFileId = driveRes.fileId;
-          console.log('[DCE Drive Bridge] Subido con éxito a Google Drive:', driveRes);
+      try {
+        if (isHeavy) {
+          // Archivo pesado (> 20 MB): Subida por fragmentos a prueba de cortes
+          const driveRes = await uploadFileInChunks(selectedFile, meta, user);
+          if (driveRes && driveRes.status === 'success') {
+            driveDownloadUrl = driveRes.directDownloadUrl;
+            driveFileId = driveRes.fileId;
+            console.log('[DCE Drive Bridge] Modpack persistente subido con éxito por fragmentos:', driveRes);
+          }
+        } else {
+          // Archivo ligero (<= 20 MB): Subida rápida tradicional de un solo golpe
+          showUploadProgress('Publicando en DCE Hub', 'Codificando paquete seguro...', 35);
+          const base64Data = await fileToBase64(selectedFile);
+          showUploadProgress('Publicando en DCE Hub', 'Transmitiendo a la nube comunitaria (Google Drive 5TB)...', 65);
+          const payload = {
+            type: type,
+            modpackMode: modpackMode,
+            fileName: selectedFile.name,
+            fileData: base64Data,
+            mimeType: selectedFile.type || 'application/octet-stream',
+            title: title,
+            version: version,
+            category: category,
+            description: description,
+            authorName: user.name,
+            authorSteamId: user.steamId,
+            authorSteamUrl: user.profileUrl,
+            authorAvatar: user.avatar
+          };
+
+          const resp = await fetch(GOOGLE_DRIVE_BRIDGE_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          const driveRes = await resp.json();
+          if (driveRes && driveRes.status === 'success') {
+            driveDownloadUrl = driveRes.directDownloadUrl;
+            driveFileId = driveRes.fileId;
+            console.log('[DCE Drive Bridge] Subido con éxito a Google Drive:', driveRes);
+          }
         }
       } catch (uploadErr) {
         console.warn('[DCE Drive Bridge] Conexión con Apps Script no disponible, respaldado localmente:', uploadErr);
+        showCommToast(`Aviso en nube: ${uploadErr.message || uploadErr}. Guardado localmente.`, 'warn');
       }
     }
 
