@@ -77,6 +77,21 @@ function verificarAccesoYAutorizar() {
     Logger.log("❌ Error en Carpeta Autoexecs (" + FOLDER_AUTOEXECS_ID + "): " + e.toString());
   }
 
+  // Verificación de permisos para subida por fragmentos (UrlFetchApp y Token)
+  try {
+    const testFetch = UrlFetchApp.fetch("https://www.google.com", { muteHttpExceptions: true });
+    Logger.log("✅ Permiso de red UrlFetchApp (script.external_request): EXITOSO");
+  } catch (eFetch) {
+    Logger.log("❌ Error en UrlFetchApp: " + eFetch.toString());
+  }
+
+  try {
+    const token = ScriptApp.getOAuthToken();
+    Logger.log("✅ Acceso a OAuth Token: OK");
+  } catch (eTok) {
+    Logger.log("❌ Error en OAuth Token: " + eTok.toString());
+  }
+
   Logger.log("=== VERIFICACIÓN TERMINADA ===");
 }
 
