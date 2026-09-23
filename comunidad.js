@@ -763,8 +763,12 @@ async function handlePublishSubmit() {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando y Subiendo...';
   }
 
+  // Preservar la referencia al archivo seleccionado antes de cerrar el modal
+  const fileToUpload = selectedFile;
+
   showUploadProgress('Publicando en DCE Hub', 'Preparando y analizando archivo...', 15);
-  closePublishModal();
+  const publishModal = document.getElementById('modal-publish');
+  if (publishModal) publishModal.classList.remove('open');
 
   try {
     const pubId = 'dce_pub_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
@@ -773,13 +777,13 @@ async function handlePublishSubmit() {
 
     // Subida automática a Google Drive Bridge si el endpoint está configurado
     if (GOOGLE_DRIVE_BRIDGE_ENDPOINT && GOOGLE_DRIVE_BRIDGE_ENDPOINT.startsWith('http')) {
-      const isHeavy = selectedFile.size > RESUMABLE_THRESHOLD_BYTES;
+      const isHeavy = fileToUpload.size > RESUMABLE_THRESHOLD_BYTES;
       const meta = { type, title, version, category, modpackMode, description };
 
       try {
         if (isHeavy) {
           // Archivo pesado (> 20 MB): Subida por fragmentos a prueba de cortes
-          const driveRes = await uploadFileInChunks(selectedFile, meta, user);
+          const driveRes = await uploadFileInChunks(fileToUpload, meta, user);
           if (driveRes && driveRes.status === 'success') {
             driveDownloadUrl = driveRes.directDownloadUrl;
             driveFileId = driveRes.fileId;
@@ -788,14 +792,14 @@ async function handlePublishSubmit() {
         } else {
           // Archivo ligero (<= 20 MB): Subida rápida tradicional de un solo golpe
           showUploadProgress('Publicando en DCE Hub', 'Codificando paquete seguro...', 35);
-          const base64Data = await fileToBase64(selectedFile);
+          const base64Data = await fileToBase64(fileToUpload);
           showUploadProgress('Publicando en DCE Hub', 'Transmitiendo a la nube comunitaria (Google Drive 5TB)...', 65);
           const payload = {
             type: type,
             modpackMode: modpackMode,
-            fileName: selectedFile.name,
+            fileName: fileToUpload.name,
             fileData: base64Data,
-            mimeType: selectedFile.type || 'application/octet-stream',
+            mimeType: fileToUpload.type || 'application/octet-stream',
             title: title,
             version: version,
             category: category,
@@ -838,15 +842,16 @@ async function handlePublishSubmit() {
       authorSteamUrl: user.profileUrl,
       authorSteamId: user.steamId,
       authorAvatar: user.avatar,
-      fileName: selectedFile.name,
-      fileSize: selectedFile.size,
-      fileBlob: selectedFile,
+      fileName: fileToUpload.name,
+      fileSize: fileToUpload.size,
+      fileBlob: fileToUpload,
       driveDownloadUrl: driveDownloadUrl,
       driveFileId: driveFileId,
       createdAt: new Date().toISOString()
     };
 
     await dbSavePublication(item);
+    resetPublishForm(); // Resetear formulario solo al completar la publicación con éxito
     showUploadProgress('¡Publicación Exitosa!', 'Tu creación ya está disponible para toda la comunidad.', 100);
     await new Promise(r => setTimeout(r, 800));
     hideUploadProgress();
