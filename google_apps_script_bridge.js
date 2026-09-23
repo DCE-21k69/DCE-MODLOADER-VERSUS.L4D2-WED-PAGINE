@@ -256,8 +256,7 @@ function doPost(e) {
         method: "put",
         headers: {
           "Authorization": "Bearer " + token,
-          "Content-Range": contentRange,
-          "Content-Length": chunkBytes.length.toString()
+          "Content-Range": contentRange
         },
         payload: chunkBlob,
         muteHttpExceptions: true
