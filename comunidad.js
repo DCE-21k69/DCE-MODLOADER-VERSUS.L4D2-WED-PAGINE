@@ -148,6 +148,23 @@ async function syncRemotePublications() {
     });
     const data = await resp.json();
     if (data && data.status === 'success' && Array.isArray(data.publications)) {
+      const remoteIds = new Set(data.publications.map(p => p.id));
+      
+      // Purgar de la base de datos local los archivos que ya fueron eliminados de Google Drive o pruebas antiguas
+      const localItems = await dbGetAllPublications();
+      for (const item of localItems) {
+        if (!item || !item.id) continue;
+        const titleLower = (item.title || '').toLowerCase();
+        const fileLower = (item.fileName || '').toLowerCase();
+        const isTestArtifact = titleLower.includes('test') || titleLower.includes('prueba') || fileLower.includes('test') || fileLower.includes('prueba');
+        const isOrphanedDrive = (item.id.startsWith('gdrive_') || item.driveFileId) && !remoteIds.has(item.id);
+        
+        if (isTestArtifact || isOrphanedDrive) {
+          await dbDeletePublication(item.id);
+        }
+      }
+
+      // Guardar o actualizar las publicaciones vigentes
       for (const pub of data.publications) {
         if (pub && pub.id) {
           await dbSavePublication(pub);
