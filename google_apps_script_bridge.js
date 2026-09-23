@@ -5,6 +5,17 @@
  * ==============================================================================
  */
 
+/**
+ * EJECUTA ESTA FUNCIÓN EN EL EDITOR PARA QUE GOOGLE TE MUESTRE LA VENTANA DE "PERMITIR":
+ */
+function pedirPermisosUrlFetch() {
+  Logger.log("=== SOLICITANDO PERMISOS DE CONEXIÓN A GOOGLE DRIVE ===");
+  const testResp = UrlFetchApp.fetch("https://www.google.com");
+  Logger.log("✅ Permiso UrlFetchApp CONCEDIDO EXITOSAMENTE (" + testResp.getResponseCode() + ")");
+  const token = ScriptApp.getOAuthToken();
+  Logger.log("✅ Token de Google Drive OK: " + (token ? "Activo" : "No disponible"));
+}
+
 // IDs de tus carpetas compartidas de Google Drive:
 const FOLDER_MODPACKS_ID = '1_kLN3bhFrm5zs196Bu6hXsZIqAWF9VHu';
 const FOLDER_AUTOEXECS_ID = '1ugWPT7cHNk31mXHSTiCGE17Ub7cOkjVB';
