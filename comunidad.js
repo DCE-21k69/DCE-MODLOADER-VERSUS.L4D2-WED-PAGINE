@@ -1,6 +1,6 @@
 /* ==============================================================================
    DCE COMMUNITY HUB — INTERACTIVE JAVASCRIPT & INDEXEDDB STORAGE
-   Desarrollado por DCE STUDIOS | https://dcegaming.netlify.app/
+   Desarrollado por DCE STUDIOS | https://dcegaming.studio/
    ============================================================================== */
 
 // IndexedDB Configuration

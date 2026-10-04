@@ -2,7 +2,7 @@
 
 Este repositorio contiene el código fuente de la página web oficial de presentación, descargas y documentación interactiva para **DCE Mods Loader [Versus Suite]** para Left 4 Dead 2.
 
-Desarrollado por **DCE STUDIOS** | [🌐 Visitar Web Principal](https://dcegaming.netlify.app/)
+Desarrollado por **DCE STUDIOS** | [🌐 Visitar Web Principal](https://dcegaming.studio/)
 
 ---
 

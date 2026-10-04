@@ -1,6 +1,6 @@
 /* ==============================================================================
    DCE MODS LOADER [VERSUS] — INTERACTIVE WEB JAVASCRIPT
-   Desarrollado por DCE STUDIOS | https://dcegaming.netlify.app/
+   Desarrollado por DCE STUDIOS | https://dcegaming.studio/
    ============================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,7 +1,7 @@
 /**
  * ==============================================================================
  * DCE MODS LOADER — PUENTE SEGURO DE SUBIDA A GOOGLE DRIVE (5TB PRO)
- * Desarrollado por DCE STUDIOS | https://dcegaming.netlify.app/
+ * Desarrollado por DCE STUDIOS | https://dcegaming.studio/
  * ==============================================================================
  */
 

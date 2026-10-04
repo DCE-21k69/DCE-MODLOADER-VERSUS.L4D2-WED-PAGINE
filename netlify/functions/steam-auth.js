@@ -1,7 +1,7 @@
 /**
  * ==============================================================================
  * DCE MODS LOADER — SERVICIO DE AUTENTICACIÓN OFICIAL STEAM OPENID 2.0
- * Desarrollado por DCE STUDIOS | https://dcegaming.netlify.app/
+ * Desarrollado por DCE STUDIOS | https://dcegaming.studio/
  * ==============================================================================
  * Maneja el ciclo completo de autenticación con Valve:
  * 1. Redirige al usuario al servidor oficial de Steam (steamcommunity.com).
@@ -13,7 +13,7 @@
 
 exports.handler = async (event, context) => {
   const query = event.queryStringParameters || {};
-  const host = event.headers['x-forwarded-host'] || event.headers.host || 'dcemodsloaderversusl4d2.netlify.app';
+  const host = event.headers['x-forwarded-host'] || event.headers.host || 'dcemodsloaderl4d2.me';
   const proto = event.headers['x-forwarded-proto'] || 'https';
   const baseUrl = `${proto}://${host}`;
   const returnUrl = `${baseUrl}/.netlify/functions/steam-auth?action=return`;
