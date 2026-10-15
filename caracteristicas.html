@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Características Pro — DCE MODS LOADER [Versus Suite] v2.3.3</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Conoce todas las funciones de DCE Mods Loader v2.3.3: Motor 0-Lag, Crosshair Studio Pro, Glows RGB, Modpacks Persistentes y Wallpaper Animado 720p." />
+  <meta name="keywords" content="Funciones DCE Mods Loader, L4D2 Versus Crosshair, L4D2 Glows RGB, L4D2 Zero-Copy, L4D2 Modpack persistente" />
+  <meta name="author" content="DCE STUDIOS" />
+  <meta property="og:title" content="Características Pro — DCE Mods Loader v2.3.3" />
+  <meta property="og:description" content="Tecnología de vanguardia para Left 4 Dead 2 Versus: 0-Lag, Crosshair Studio, Glows y Modpacks Autónomos." />
+  <meta property="og:image" content="dcemod2.png" />
+  <meta property="og:type" content="website" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="icono.png" />
+
+  <!-- Google Fonts: Outfit & Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Animated Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Glow Lighting -->
+  <div class="ambient-light ambient-1"></div>
+  <div class="ambient-light ambient-2"></div>
+  <div class="ambient-light ambient-3"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast">Mensaje</div>
+
+  <div class="site-wrapper">
+
+    <!-- ==============================================================================
+         GLOBAL NAVBAR
+         ============================================================================== -->
+    <header class="navbar" id="navbar">
+      <div class="container">
+        <!-- Brand Lockup -->
+        <a href="index.html" class="nav-brand">
+          <div class="nav-logo-box">
+            <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+          </div>
+          <div class="nav-brand-text">
+            <span class="brand-title"><strong>DCE</strong> MODS LOADER</span>
+            <span class="nav-tag-versus">VERSUS</span>
+          </div>
+        </a>
+
+        <!-- Center Capsule Navigation -->
+        <nav class="nav-center-capsule">
+          <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="nav-link">Inicio</a></li>
+            <li><a href="caracteristicas.html" class="nav-link active">Características</a></li>
+            <li><a href="descargas.html" class="nav-link">Descargas</a></li>
+            <li><a href="comunidad.html" class="nav-link nav-link-community"><i class="fas fa-users"></i> Comunidad</a></li>
+
+            <!-- Dropdown "Más" -->
+            <li class="nav-dropdown">
+              <button class="nav-dropdown-btn" aria-expanded="false" aria-haspopup="true">
+                <span>Más</span> <i class="fas fa-chevron-down nav-dropdown-arrow"></i>
+              </button>
+              <ul class="nav-dropdown-menu">
+                <li><a href="guia.html"><i class="fas fa-book-open"></i> Guía de Uso</a></li>
+                <li><a href="comparativa.html"><i class="fas fa-chart-bar"></i> Comparativa Técnica</a></li>
+                <li><a href="faq.html"><i class="fas fa-circle-question"></i> FAQ &amp; Soporte</a></li>
+                <li><a href="desarrollador.html"><i class="fas fa-user-code"></i> Sobre el Creador</a></li>
+              </ul>
+            </li>
+
+            <!-- Mobile Drawer Actions -->
+            <li class="mobile-only-action">
+              <a href="descargas.html" class="btn btn-primary btn-sm" style="width: 100%;">
+                <i class="fas fa-download"></i> <span>Descargar v2.3.3</span>
+              </a>
+            </li>
+            <li class="mobile-only-action">
+              <a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer" class="btn btn-discord btn-sm" style="width: 100%;">
+                <i class="fab fa-discord"></i> <span>Soporte Discord</span>
+              </a>
+            </li>
+            <li class="mobile-only-action">
+              <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="btn btn-paypal btn-sm" style="width: 100%;">
+                <i class="fab fa-paypal"></i> <span>Donar con PayPal</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="nav-actions">
+          <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="nav-pill-btn nav-pill-paypal nav-btn-desktop" title="Donar con PayPal">
+            <i class="fab fa-paypal"></i> <span>Donar</span>
+          </a>
+          <a href="https://dcegaming.studio/" target="_blank" rel="noopener noreferrer" class="nav-pill-btn nav-btn-desktop" title="Portal DCE Studios">
+            <i class="fas fa-globe"></i> <span>DCE Studios</span>
+          </a>
+          <a href="descargas.html" class="btn btn-primary btn-sm nav-btn-cta nav-btn-desktop">
+            <i class="fas fa-download"></i> <span>Descargar</span>
+          </a>
+          <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==============================================================================
+         PAGE HERO
+         ============================================================================== -->
+    <section class="page-hero">
+      <div class="bg-mesh-grid"></div>
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="fas fa-house"></i> Inicio</a>
+          <i class="fas fa-chevron-right"></i>
+          <span class="current">Características Pro</span>
+        </div>
+
+        <div class="badge badge-flame" style="margin-bottom: 16px;">
+          <span class="badge-pulse"></span>
+          <span>⚡ Suite de Alto Rendimiento • Fusión Raycast Bento Grid</span>
+        </div>
+
+        <h1 class="page-hero-title">
+          Tecnología Diseñada para la <br />
+          <span class="text-gradient">Máxima Eficiencia</span>
+        </h1>
+        <p class="page-hero-desc">
+          Explora en detalle cómo DCE Mods Loader combina el motor Zero-Copy con utilidades competitivas de precisión como Crosshair Studio Pro y auras RGB dinámicas.
+        </p>
+
+        <!-- Feature Spec Strip -->
+        <div class="hero-trust-bar" style="margin-top: 32px;">
+          <div class="trust-item">
+            <i class="fas fa-bolt"></i>
+            <span>Activación en &lt; 0.05 Segundos</span>
+          </div>
+          <div class="trust-item">
+            <i class="fas fa-hard-drive"></i>
+            <span>0 MB Espacio Duplicado</span>
+          </div>
+          <div class="trust-item">
+            <i class="fas fa-crosshairs"></i>
+            <span>Retícula Táctica sin Marcas</span>
+          </div>
+          <div class="trust-item">
+            <i class="fas fa-rotate-left"></i>
+            <span>Restablecer Ajustes en 1 Clic</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         BENTO GRID SECTION (RAYCAST STYLE)
+         ============================================================================== -->
+    <section class="section" style="padding-top: 50px;">
+      <div class="container">
+
+        <div class="features-grid">
+
+          <!-- Bento Card 1: Motor Unificador Maestro 0-Lag (Span 2) -->
+          <div class="feature-card bento-card span-2">
+            <div class="bento-badge-row">
+              <span class="raycast-chip"><i class="fas fa-bolt"></i> 0.05s INJECTION</span>
+              <span class="raycast-chip highlight"><i class="fas fa-gauge-high"></i> ZERO LAG ENGINE</span>
+            </div>
+            <div class="feature-icon-box">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <h3 class="feature-title">Motor Unificador Maestro 0-Lag &amp; Zero-Copy</h3>
+            <p class="feature-desc">
+              Utiliza enlaces duros (hardlinks) en Windows y enlaces simbólicos en Linux para fusionar 50+ mods en un único paquete maestro <code>pak01_dir.vpk</code> inyectado directamente en <code>gameinfo.txt</code>. Olvídate de los tirones o bajadas de FPS en partidas Versus de 8 jugadores: habilitar todo tu modpack toma <strong>menos de 0.05 segundos</strong> y ocupa exactamente <strong>0 MB adicionales</strong> en tu disco.
+            </p>
+            <div class="bento-code-tag">
+              <i class="fas fa-terminal"></i> <span>SearchPath: left4dead2/pak01_dir.vpk (Zero Stutter)</span>
+            </div>
+          </div>
+
+          <!-- Bento Card 2: Crosshair Studio Pro -->
+          <div class="feature-card bento-card">
+            <div class="bento-badge-row">
+              <span class="raycast-chip new-chip"><i class="fas fa-star"></i> NUEVO v2.3.3</span>
+            </div>
+            <div class="feature-icon-box">
+              <i class="fas fa-crosshairs"></i>
+            </div>
+            <h3 class="feature-title">Crosshair Studio Pro</h3>
+            <p class="feature-desc">
+              Visor táctico puro y limpio de retícula para Left 4 Dead 2. Cuenta con <strong>sincronización automática de contraste</strong> según el color que elijas, simulador interactivo de retroceso (Click-to-Shoot) y animación Arcoíris RGB continua en vivo sin marcas molestas.
+            </p>
+            <span class="feature-tag">Precisión Competitiva</span>
+          </div>
+
+          <!-- Bento Card 3: Glows Studio & Discord Rich Presence -->
+          <div class="feature-card bento-card">
+            <div class="bento-badge-row">
+              <span class="raycast-chip"><i class="fab fa-discord"></i> RICH PRESENCE</span>
+            </div>
+            <div class="feature-icon-box">
+              <i class="fas fa-wand-magic-sparkles"></i>
+            </div>
+            <h3 class="feature-title">Glows Studio &amp; Discord RPC</h3>
+            <p class="feature-desc">
+              Personaliza el color de las auras de supervivientes, infectados y objetos con soporte de ciclo arcoíris dinámico. Además, muestra tu mapa y tiempo de juego en vivo en Discord con el Rich Presence nativo integrado.
+            </p>
+            <span class="feature-tag">Conexión en Vivo</span>
+          </div>
+
+          <!-- Bento Card 4: Modpacks Persistentes Autónomos -->
+          <div class="feature-card bento-card">
+            <div class="bento-badge-row">
+              <span class="raycast-chip"><i class="fas fa-shield"></i> LOCAL STORAGE</span>
+            </div>
+            <div class="feature-icon-box">
+              <i class="fas fa-box-archive"></i>
+            </div>
+            <h3 class="feature-title">Modpacks Persistentes Autónomos</h3>
+            <p class="feature-desc">
+              ¿Te desuscribiste de un mod en la Steam Workshop o el autor lo eliminó? Al guardar tu modpack persistente en <code>dce_storage/</code>, tus complementos quedan resguardados localmente y listos para jugar sin depender de descargas.
+            </p>
+            <span class="feature-tag">Autonomía Total</span>
+          </div>
+
+          <!-- Bento Card 5: Detector de Conflictos VPK & Crash Analyzer -->
+          <div class="feature-card bento-card">
+            <div class="bento-badge-row">
+              <span class="raycast-chip"><i class="fas fa-bug"></i> AUTO-DIAGNOSTIC</span>
+            </div>
+            <div class="feature-icon-box">
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="feature-title">Detector de Conflictos &amp; Crash Analyzer</h3>
+            <p class="feature-desc">
+              Escanea los archivos binarios internos de cada VPK para alertarte si dos modelos, armas o texturas chocan entre sí. Si el juego se cierra, el analizador inteligente identifica el addon causante al instante.
+            </p>
+            <span class="feature-tag">Diagnóstico Inteligente</span>
+          </div>
+
+          <!-- Bento Card 6: Fondo Animado 720p & Restablecer de Fábrica (Span 2) -->
+          <div class="feature-card bento-card span-2">
+            <div class="bento-badge-row">
+              <span class="raycast-chip new-chip"><i class="fas fa-sparkles"></i> NUEVO v2.3.3</span>
+              <span class="raycast-chip"><i class="fas fa-sliders"></i> 1-CLICK RESET</span>
+            </div>
+            <div class="feature-icon-box">
+              <i class="fas fa-palette"></i>
+            </div>
+            <h3 class="feature-title">Wallpaper Animado 720p &amp; Restauración de Fábrica</h3>
+            <p class="feature-desc">
+              La app integra de fábrica un fondo animado en <strong>WebP 720p ultra-ligero (6.5 MB, ~2% CPU)</strong> con decodificación nativa sin caídas de FPS. Además, incluye temas oscuros como <em>Obsidiana &amp; Cristal</em>, soporte de partículas flotantes y un nuevo botón en Ajustes para restablecer temas y fondos a sus valores de fábrica en 1 solo clic.
+            </p>
+            <span class="feature-tag">Estética Glassmorphism Premium</span>
+          </div>
+
+        </div>
+
+        <!-- Callout Banner -->
+        <div class="coming-soon-banner" style="margin-top: 48px;">
+          <div class="banner-content">
+            <div class="banner-icon"><i class="fas fa-download" style="color: var(--flame-gold);"></i></div>
+            <div class="banner-text">
+              <h4>¿Listo para dominar en Versus con tus mods favoritos?</h4>
+              <p>Descarga la última versión v2.3.3 y disfruta de la suite más rápida, limpia y segura jamás creada.</p>
+            </div>
+          </div>
+          <a href="descargas.html" class="btn btn-primary" style="flex-shrink: 0;">
+            <i class="fas fa-download"></i> <span>Ir a Descargas</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         GLOBAL FOOTER
+         ============================================================================== -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="nav-brand">
+              <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+              <span>DCE MODS LOADER</span>
+            </div>
+            <p class="footer-desc">
+              Suite de herramientas avanzada desarrollada con pasión por <strong>DCE STUDIOS</strong> para la comunidad de Left 4 Dead 2 y Versus competitivo.
+            </p>
+          </div>
+
+          <div class="footer-column">
+            <h4>Ecosistema</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Inicio</a></li>
+              <li><a href="caracteristicas.html">Características</a></li>
+              <li><a href="descargas.html">Descargas v2.3.3</a></li>
+              <li><a href="guia.html">Guía de Uso</a></li>
+              <li><a href="comparativa.html">Comparativa Técnica</a></li>
+              <li><a href="faq.html">Preguntas Frecuentes</a></li>
+              <li><a href="comunidad.html">Community Hub</a></li>
+              <li><a href="desarrollador.html">Sobre el Creador</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>Descargas Directas</h4>
+            <ul class="footer-links">
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader_Setup.exe"><i class="fab fa-windows"></i> Windows 10/11 (.exe)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader.flatpak"><i class="fab fa-linux"></i> Linux &amp; Steam Deck (.flatpak)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/tag/v2.3.3" target="_blank" rel="noopener noreferrer"><i class="fas fa-code-branch"></i> Release v2.3.3 (GitHub)</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>DCE STUDIOS</h4>
+            <ul class="footer-links">
+              <li><a href="https://steamcommunity.com/id/EducationEditionDCE/" target="_blank" rel="noopener noreferrer"><i class="fab fa-steam"></i> Steam del Creador</a></li>
+              <li><a href="https://dcegaming.studio/" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> Portal Oficial</a></li>
+              <li><a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i> Soporte Discord</a></li>
+              <li><a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer"><i class="fab fa-paypal"></i> Donar con PayPal</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 DCE STUDIOS. Todos los derechos reservados.</p>
+          <p>Left 4 Dead 2 y Steam son marcas registradas de Valve Corporation. Esta herramienta es un proyecto independiente para la comunidad.</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

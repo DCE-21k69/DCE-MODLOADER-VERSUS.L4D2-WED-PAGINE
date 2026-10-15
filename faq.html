@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preguntas Frecuentes — DCE MODS LOADER [Versus Suite] v2.3.3</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Preguntas frecuentes y soporte sobre DCE Mods Loader: seguridad VAC, consistencia sv_consistency 1, Steam Deck y modo persistente." />
+  <meta name="keywords" content="FAQ DCE Mods Loader, VAC baneo L4D2 mods, soporte discord dce studios, sv_consistency 1 bypass seguro" />
+  <meta name="author" content="DCE STUDIOS" />
+  <meta property="og:title" content="Preguntas Frecuentes — DCE Mods Loader v2.3.3" />
+  <meta property="og:description" content="Respuestas claras sobre seguridad, rendimiento y compatibilidad con Left 4 Dead 2." />
+  <meta property="og:image" content="dcemod2.png" />
+  <meta property="og:type" content="website" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="icono.png" />
+
+  <!-- Google Fonts: Outfit & Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Animated Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Glow Lighting -->
+  <div class="ambient-light ambient-1"></div>
+  <div class="ambient-light ambient-2"></div>
+  <div class="ambient-light ambient-3"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast">Mensaje</div>
+
+  <div class="site-wrapper">
+
+    <!-- ==============================================================================
+         GLOBAL NAVBAR
+         ============================================================================== -->
+    <header class="navbar" id="navbar">
+      <div class="container">
+        <!-- Brand Lockup -->
+        <a href="index.html" class="nav-brand">
+          <div class="nav-logo-box">
+            <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+          </div>
+          <div class="nav-brand-text">
+            <span class="brand-title"><strong>DCE</strong> MODS LOADER</span>
+            <span class="nav-tag-versus">VERSUS</span>
+          </div>
+        </a>
+
+        <!-- Center Capsule Navigation -->
+        <nav class="nav-center-capsule">
+          <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="nav-link">Inicio</a></li>
+            <li><a href="caracteristicas.html" class="nav-link">Características</a></li>
+            <li><a href="descargas.html" class="nav-link">Descargas</a></li>
+            <li><a href="comunidad.html" class="nav-link nav-link-community"><i class="fas fa-users"></i> Comunidad</a></li>
+
+            <!-- Dropdown "Más" -->
+            <li class="nav-dropdown">
+              <button class="nav-dropdown-btn" aria-expanded="false" aria-haspopup="true">
+                <span>Más</span> <i class="fas fa-chevron-down nav-dropdown-arrow"></i>
+              </button>
+              <ul class="nav-dropdown-menu">
+                <li><a href="guia.html"><i class="fas fa-book-open"></i> Guía de Uso</a></li>
+                <li><a href="comparativa.html"><i class="fas fa-chart-bar"></i> Comparativa Técnica</a></li>
+                <li><a href="faq.html" class="active"><i class="fas fa-circle-question"></i> FAQ &amp; Soporte</a></li>
+                <li><a href="desarrollador.html"><i class="fas fa-user-code"></i> Sobre el Creador</a></li>
+              </ul>
+            </li>
+
+            <!-- Mobile Drawer Actions -->
+            <li class="mobile-only-action">
+              <a href="descargas.html" class="btn btn-primary btn-sm" style="width: 100%;">
+                <i class="fas fa-download"></i> <span>Descargar v2.3.3</span>
+              </a>
+            </li>
+            <li class="mobile-only-action">
+              <a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer" class="btn btn-discord btn-sm" style="width: 100%;">
+                <i class="fab fa-discord"></i> <span>Soporte Discord</span>
+              </a>
+            </li>
+            <li class="mobile-only-action">
+              <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="btn btn-paypal btn-sm" style="width: 100%;">
+                <i class="fab fa-paypal"></i> <span>Donar con PayPal</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="nav-actions">
+          <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="nav-pill-btn nav-pill-paypal nav-btn-desktop" title="Donar con PayPal">
+            <i class="fab fa-paypal"></i> <span>Donar</span>
+          </a>
+          <a href="https://dcegaming.studio/" target="_blank" rel="noopener noreferrer" class="nav-pill-btn nav-btn-desktop" title="Portal DCE Studios">
+            <i class="fas fa-globe"></i> <span>DCE Studios</span>
+          </a>
+          <a href="descargas.html" class="btn btn-primary btn-sm nav-btn-cta nav-btn-desktop">
+            <i class="fas fa-download"></i> <span>Descargar</span>
+          </a>
+          <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==============================================================================
+         PAGE HERO
+         ============================================================================== -->
+    <section class="page-hero">
+      <div class="bg-mesh-grid"></div>
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="fas fa-house"></i> Inicio</a>
+          <i class="fas fa-chevron-right"></i>
+          <span class="current">Preguntas Frecuentes</span>
+        </div>
+
+        <div class="badge badge-flame" style="margin-bottom: 16px;">
+          <span class="badge-pulse"></span>
+          <span>🛡️ Seguridad, Rendimiento &amp; Dudas Frecuentes</span>
+        </div>
+
+        <h1 class="page-hero-title">
+          Preguntas <span class="text-gradient">Frecuentes</span>
+        </h1>
+        <p class="page-hero-desc">
+          Todo lo que necesitas saber sobre la seguridad contra el sistema antitrampas VAC de Valve, cómo funciona el motor Zero-Copy y cómo resolver cualquier duda.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         FAQ ACCORDION SECTION
+         ============================================================================== -->
+    <section class="section" style="padding-top: 50px;">
+      <div class="container">
+
+        <div class="faq-container">
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Me pueden banear por VAC en Steam al usar esta herramienta?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <strong>No, rotundo y definitivo.</strong> Valve Anti-Cheat (VAC) detecta modificaciones en ejecutables (como <code>hl2.exe</code> o <code>left4dead2.exe</code>) e inyecciones de código malicioso o librerías DLL en la memoria del juego. DCE Mods Loader <strong>NO</strong> inyecta ninguna DLL ni toca la memoria; simplemente utiliza la directiva nativa <code>SearchPaths</code> del propio motor Source de Valve en el archivo <code>gameinfo.txt</code>, exactamente igual que como funcionan los DLCs y expansiones oficiales del juego.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Por qué funciona en Versus si los servidores tienen sv_consistency 1?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                El comando de consistencia del servidor revisa los archivos montados en la carpeta <code>addons/workshop/</code>. Al montar los addons como recursos del juego de alta prioridad mediante <code>gameinfo.txt</code>, el motor Source carga las texturas y modelos como si fueran recursos base instalados del juego, omitiendo la restricción de consistencia sin modificar la consola ni otorgar ventajas antideportivas.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cómo funciona el modo de Modpack Persistente?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Normalmente, al desuscribirte de un mod en la Workshop, Steam lo elimina de tu disco duro. El modo persistente respalda el archivo <code>.vpk</code> en la carpeta interna <code>dce_storage/</code> usando enlaces duros (0 MB extra en Windows). Cuando activas el modpack, DCE Mods Loader lo carga desde ese almacén local, permitiéndote jugar en Versus con el addon activo aunque no estés suscrito en Steam.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cómo lo instalo en mi Steam Deck con SteamOS?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                1. Entra al <strong>Modo Escritorio (Desktop Mode)</strong> de tu Steam Deck.<br />
+                2. Descarga el archivo <code>DCE_Mods_Loader.flatpak</code> desde la sección de descargas.<br />
+                3. Haz doble clic para instalarlo a través del gestor Discover.<br />
+                4. Abre Steam, ve a <em>"Juegos > Añadir un juego que no es de Steam"</em> y selecciona DCE Mods Loader para poder iniciarlo también desde el Gaming Mode con los controles nativos.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Qué ocurre si Valve actualiza Left 4 Dead 2?</span>
+              <i class="fas fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Si una actualización de Steam sobreescribe el archivo <code>gameinfo.txt</code>, no hay problema alguno: abre DCE Mods Loader, haz clic en tu modpack o selecciona tus mods y presiona <strong>JUGAR</strong>. La aplicación reinyectará los enlaces limpios en menos de un segundo sin que tengas que volver a descargar nada. Además, dispones de un botón de <em>Restauración Limpia a Fábrica</em> en el panel de Ajustes.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Discord Support Rule Highlight Banner -->
+        <div class="support-card" style="margin-top: 48px;">
+          <div class="support-header">
+            <div class="support-icon-wrap">
+              <i class="fab fa-discord"></i>
+            </div>
+            <div>
+              <h3 class="support-title">¿Tienes Alguna Otra Duda? Entra a Nuestro Discord</h3>
+              <p class="support-desc">Canal oficial de soporte comunitario, avisos de actualizaciones y ayuda directa del desarrollador.</p>
+            </div>
+          </div>
+
+          <div class="support-rule-box">
+            <div class="support-rule-header">
+              <i class="fas fa-triangle-exclamation"></i>
+              <span>REGLA OBLIGATORIA PARA ENTRAR AL DISCORD</span>
+            </div>
+            <p class="support-rule-question">
+              Cuando entres al servidor de Discord y te salga la pregunta: <strong>"¿Qué quieres hacer en la comunidad?"</strong>, es <strong>obligatorio</strong> seleccionar la siguiente opción:
+            </p>
+            <div class="support-role-highlight">
+              <i class="fas fa-check-circle"></i>
+              <span>"ser mienbro activo jugador de left 4 dead 2"</span>
+            </div>
+            <p class="support-rule-note">
+              <i class="fas fa-info-circle"></i> <strong>Importante:</strong> Debes marcar obligatoriamente esta opción para que el bot del servidor te otorgue el rol de acceso completo y puedas ver los canales de ayuda, tickets de soporte y descargas.
+            </p>
+          </div>
+
+          <div class="support-actions-row">
+            <a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer" class="btn btn-discord btn-lg">
+              <i class="fab fa-discord"></i>
+              <span>Unirse al Servidor de Discord</span>
+            </a>
+            <button class="btn btn-secondary btn-lg copy-btn" data-clipboard="https://discord.gg/yCDVqdD2bk">
+              <i class="fas fa-copy"></i>
+              <span>Copiar Enlace de Invitación</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         GLOBAL FOOTER
+         ============================================================================== -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="nav-brand">
+              <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+              <span>DCE MODS LOADER</span>
+            </div>
+            <p class="footer-desc">
+              Suite de herramientas avanzada desarrollada con pasión por <strong>DCE STUDIOS</strong> para la comunidad de Left 4 Dead 2 y Versus competitivo.
+            </p>
+          </div>
+
+          <div class="footer-column">
+            <h4>Ecosistema</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Inicio</a></li>
+              <li><a href="caracteristicas.html">Características</a></li>
+              <li><a href="descargas.html">Descargas v2.3.3</a></li>
+              <li><a href="guia.html">Guía de Uso</a></li>
+              <li><a href="comparativa.html">Comparativa Técnica</a></li>
+              <li><a href="faq.html">Preguntas Frecuentes</a></li>
+              <li><a href="comunidad.html">Community Hub</a></li>
+              <li><a href="desarrollador.html">Sobre el Creador</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>Descargas Directas</h4>
+            <ul class="footer-links">
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader_Setup.exe"><i class="fab fa-windows"></i> Windows 10/11 (.exe)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader.flatpak"><i class="fab fa-linux"></i> Linux &amp; Steam Deck (.flatpak)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/tag/v2.3.3" target="_blank" rel="noopener noreferrer"><i class="fas fa-code-branch"></i> Release v2.3.3 (GitHub)</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>DCE STUDIOS</h4>
+            <ul class="footer-links">
+              <li><a href="https://steamcommunity.com/id/EducationEditionDCE/" target="_blank" rel="noopener noreferrer"><i class="fab fa-steam"></i> Steam del Creador</a></li>
+              <li><a href="https://dcegaming.studio/" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> Portal Oficial</a></li>
+              <li><a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i> Soporte Discord</a></li>
+              <li><a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer"><i class="fab fa-paypal"></i> Donar con PayPal</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 DCE STUDIOS. Todos los derechos reservados.</p>
+          <p>Left 4 Dead 2 y Steam son marcas registradas de Valve Corporation. Esta herramienta es un proyecto independiente para la comunidad.</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

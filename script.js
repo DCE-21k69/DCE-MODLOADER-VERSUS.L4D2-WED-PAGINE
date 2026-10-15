@@ -5,12 +5,60 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
+  initBackgroundSlideshow();
   initParticles();
   initTiltEffect();
+  initSpotlightEffect();
+  initShowcaseTabs();
   initGuideTabs();
   initFaqAccordion();
   initCopyButtons();
 });
+
+/* ==============================================================================
+   0. BACKGROUND SLIDESHOW (dcegaming.studio style)
+   ============================================================================== */
+function initBackgroundSlideshow() {
+  if (document.getElementById('bg-slideshow')) return;
+
+  const slideshowImages = [
+    'fondos/1.jpg',
+    'fondos/2.jpg',
+    'fondos/3.jpg',
+    'fondos/4.jpg',
+    'fondos/5.jpg'
+  ];
+
+  const slideshowContainer = document.createElement('div');
+  slideshowContainer.id = 'bg-slideshow';
+
+  slideshowImages.forEach((src, index) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'DCE Fondo ' + (index + 1);
+    img.classList.add('bg-slide');
+    if (index === 0) img.classList.add('active');
+    img.loading = index === 0 ? 'eager' : 'lazy';
+    slideshowContainer.appendChild(img);
+  });
+
+  const overlay = document.createElement('div');
+  overlay.className = 'bg-slideshow-overlay';
+  slideshowContainer.appendChild(overlay);
+
+  document.body.prepend(slideshowContainer);
+
+  let currentSlide = 0;
+  const slides = slideshowContainer.querySelectorAll('.bg-slide');
+
+  if (slides.length > 1) {
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 6000);
+  }
+}
 
 /* ==============================================================================
    1. NAVBAR & MOBILE MENU
@@ -62,23 +110,26 @@ function initNavbar() {
   }
 
   function highlightCurrentSection() {
-    const sections = document.querySelectorAll('section[id]');
-    const scrollY = window.pageYOffset;
-
-    sections.forEach(current => {
-      const sectionHeight = current.offsetHeight;
-      const sectionTop = current.offsetTop - 120;
-      const sectionId = current.getAttribute('id');
-      const targetLink = document.querySelector(`.nav-link[href*="${sectionId}"]`);
-
-      if (targetLink) {
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-          targetLink.classList.add('active');
-        } else {
-          targetLink.classList.remove('active');
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    // If on a dedicated page (not index.html), highlight that page's nav link
+    if (currentPath !== 'index.html' && currentPath !== '') {
+      links.forEach(l => {
+        const href = l.getAttribute('href');
+        if (href && href.includes(currentPath)) {
+          l.classList.add('active');
+        } else if (!href || !href.startsWith('#')) {
+          l.classList.remove('active');
         }
-      }
-    });
+      });
+      return;
+    }
+
+    // If on index.html, highlight hero if at top
+    const scrollY = window.pageYOffset;
+    const heroLink = document.querySelector('.nav-link[href="index.html"]');
+    if (heroLink && scrollY < 300) {
+      heroLink.classList.add('active');
+    }
   }
 
   // Dropdown "Más"
@@ -205,7 +256,7 @@ function initParticles() {
 }
 
 /* ==============================================================================
-   3. 3D PERSPECTIVE TILT ON SHOWCASE WINDOW
+   3. 3D PERSPECTIVE TILT ON SHOWCASE WINDOW (MEDAL.TV 3D EFFECT)
    ============================================================================== */
 function initTiltEffect() {
   const card = document.getElementById('showcase-window');
@@ -217,6 +268,7 @@ function initTiltEffect() {
   }
 
   const wrapper = document.querySelector('.showcase-wrapper');
+  if (!wrapper) return;
 
   wrapper.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();
@@ -226,16 +278,65 @@ function initTiltEffect() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -5;
-    const rotateY = ((x - centerX) / centerX) * 5;
+    const rotateX = ((y - centerY) / centerY) * -6;
+    const rotateY = ((x - centerX) / centerX) * 6;
 
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+    card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
   });
 
   wrapper.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    card.style.transform = '';
   });
 }
+
+/* ==============================================================================
+   3B. RAYCAST MOUSE SPOTLIGHT (INTERACTIVE GLOW)
+   ============================================================================== */
+function initSpotlightEffect() {
+  const cards = document.querySelectorAll('.bento-card, .download-card, .donate-card, .dev-card, .page-card, .req-card, .changelog-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+}
+
+/* ==============================================================================
+   3C. MEDAL.TV INTERACTIVE FEATURE SWITCHER TABS
+   ============================================================================== */
+function initShowcaseTabs() {
+  const tabs = document.querySelectorAll('.showcase-tab');
+  const descEl = document.getElementById('dynamic-desc-text');
+  const banner = document.getElementById('showcase-dynamic-desc');
+  if (!tabs.length || !descEl) return;
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const desc = tab.getAttribute('data-desc');
+      if (desc && descEl) {
+        if (banner) {
+          banner.style.opacity = '0.35';
+          banner.style.transform = 'translateY(3px)';
+        }
+        setTimeout(() => {
+          descEl.innerHTML = desc;
+          if (banner) {
+            banner.style.opacity = '1';
+            banner.style.transform = 'translateY(0)';
+          }
+        }, 140);
+      }
+    });
+  });
+}
+
 
 /* ==============================================================================
    4. GUIDE TABS SYSTEM

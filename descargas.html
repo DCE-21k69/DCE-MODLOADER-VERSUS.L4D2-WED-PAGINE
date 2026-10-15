@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Descargas Oficiales — DCE MODS LOADER [Versus Suite] v2.3.3</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Descarga oficial de DCE Mods Loader v2.3.3 para Windows 10/11 y Steam Deck (SteamOS). Juega con mods en Versus sin bloqueos y 100% seguro contra VAC." />
+  <meta name="keywords" content="Descargar DCE Mods Loader, L4D2 Versus mods, Steam Deck L4D2, Left 4 Dead 2 addons versus, Flatpak, Windows Setup" />
+  <meta name="author" content="DCE STUDIOS" />
+  <meta property="og:title" content="Descarga Oficial DCE Mods Loader v2.3.3 — Left 4 Dead 2 Versus" />
+  <meta property="og:description" content="Descarga oficial y gratuita para Windows y Steam Deck. Sin publicidad y 100% libre de virus." />
+  <meta property="og:image" content="dcemod2.png" />
+  <meta property="og:type" content="website" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="icono.png" />
+
+  <!-- Google Fonts: Outfit & Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Animated Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Glow Lighting -->
+  <div class="ambient-light ambient-1"></div>
+  <div class="ambient-light ambient-2"></div>
+  <div class="ambient-light ambient-3"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast">Mensaje copiado con éxito</div>
+
+  <div class="site-wrapper">
+
+    <!-- ==============================================================================
+         GLOBAL NAVBAR
+         ============================================================================== -->
+    <header class="navbar" id="navbar">
+      <div class="container">
+        <!-- Brand Lockup -->
+        <a href="index.html" class="nav-brand">
+          <div class="nav-logo-box">
+            <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+          </div>
+          <div class="nav-brand-text">
+            <span class="brand-title"><strong>DCE</strong> MODS LOADER</span>
+            <span class="nav-tag-versus">VERSUS</span>
+          </div>
+        </a>
+
+        <!-- Center Capsule Navigation -->
+        <nav class="nav-center-capsule">
+          <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="nav-link">Inicio</a></li>
+            <li><a href="caracteristicas.html" class="nav-link">Características</a></li>
+            <li><a href="descargas.html" class="nav-link active">Descargas</a></li>
+            <li><a href="comunidad.html" class="nav-link nav-link-community"><i class="fas fa-users"></i> Comunidad</a></li>
+
+            <!-- Dropdown "Más" -->
+            <li class="nav-dropdown">
+              <button class="nav-dropdown-btn" aria-expanded="false" aria-haspopup="true">
+                <span>Más</span> <i class="fas fa-chevron-down nav-dropdown-arrow"></i>
+              </button>
+              <ul class="nav-dropdown-menu">
+                <li><a href="guia.html"><i class="fas fa-book-open"></i> Guía de Uso</a></li>
+                <li><a href="comparativa.html"><i class="fas fa-chart-bar"></i> Comparativa Técnica</a></li>
+                <li><a href="faq.html"><i class="fas fa-circle-question"></i> FAQ &amp; Soporte</a></li>
+                <li><a href="desarrollador.html"><i class="fas fa-user-code"></i> Sobre el Creador</a></li>
+              </ul>
+            </li>
+
+            <!-- Mobile Drawer Actions -->
+            <li class="mobile-only-action">
+              <a href="descargas.html" class="btn btn-primary btn-sm" style="width: 100%;">
+                <i class="fas fa-download"></i> <span>Descargar v2.3.3</span>
+              </a>
+            </li>
+            <li class="mobile-only-action">
+              <a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer" class="btn btn-discord btn-sm" style="width: 100%;">
+                <i class="fab fa-discord"></i> <span>Soporte Discord</span>
+              </a>
+            </li>
+            <li class="mobile-only-action">
+              <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="btn btn-paypal btn-sm" style="width: 100%;">
+                <i class="fab fa-paypal"></i> <span>Donar con PayPal</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="nav-actions">
+          <a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer" class="nav-pill-btn nav-pill-paypal nav-btn-desktop" title="Donar con PayPal">
+            <i class="fab fa-paypal"></i> <span>Donar</span>
+          </a>
+          <a href="https://dcegaming.studio/" target="_blank" rel="noopener noreferrer" class="nav-pill-btn nav-btn-desktop" title="Portal DCE Studios">
+            <i class="fas fa-globe"></i> <span>DCE Studios</span>
+          </a>
+          <a href="descargas.html" class="btn btn-primary btn-sm nav-btn-cta nav-btn-desktop">
+            <i class="fas fa-download"></i> <span>Descargar</span>
+          </a>
+          <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==============================================================================
+         PAGE HERO
+         ============================================================================== -->
+    <section class="page-hero">
+      <div class="bg-mesh-grid"></div>
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="fas fa-house"></i> Inicio</a>
+          <i class="fas fa-chevron-right"></i>
+          <span class="current">Descargas Oficiales</span>
+        </div>
+
+        <div class="badge badge-flame" style="margin-bottom: 16px;">
+          <span class="badge-pulse"></span>
+          <span>🔥 Versión Oficial v2.3.3 • 100% Gratuita &amp; Sin Publicidad</span>
+        </div>
+
+        <h1 class="page-hero-title">
+          Descarga <span class="text-gradient">DCE Mods Loader</span>
+        </h1>
+        <p class="page-hero-desc">
+          Obtén la suite definitiva para <strong>Left 4 Dead 2</strong> en Windows 10/11 y Steam Deck / Linux (SteamOS). Instalación limpia, sin inyecciones DLL y con cero riesgo de baneo VAC.
+        </p>
+
+        <!-- Overwolf-Style Live Trust Bar -->
+        <div class="hero-trust-bar" style="margin-top: 32px;">
+          <div class="trust-item">
+            <span class="live-dot-green"></span>
+            <span>100% Anti-VAC Safe</span>
+          </div>
+          <div class="trust-item">
+            <i class="fas fa-shield-virus"></i>
+            <span>VirusTotal: 0/72 Detecciones</span>
+          </div>
+          <div class="trust-item">
+            <i class="fab fa-github"></i>
+            <span>Alojado en GitHub Oficial</span>
+          </div>
+          <div class="trust-item">
+            <i class="fab fa-steam"></i>
+            <span>Steam &amp; Steam Deck Compatible</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         DOWNLOADS PLATFORM CARDS
+         ============================================================================== -->
+    <section class="section" style="padding-top: 50px;">
+      <div class="container">
+
+        <div class="downloads-grid">
+
+          <!-- Windows Card -->
+          <div class="download-card">
+            <div class="download-icon">
+              <i class="fab fa-windows"></i>
+            </div>
+            <h3 class="download-platform">Windows 10 / 11</h3>
+            <p class="download-meta">Instalador Guiado (.exe) • 64-bit • v2.3.3</p>
+
+            <ul class="download-features">
+              <li><i class="fas fa-check"></i> Asistente de instalación guiado con accesos directos automáticos</li>
+              <li><i class="fas fa-check"></i> <strong>Motor Unificador Maestro 0-Lag</strong> en un solo paquete pak01</li>
+              <li><i class="fas fa-check"></i> <strong>Crosshair Studio Pro</strong> con simulación de tiro y contraste auto</li>
+              <li><i class="fas fa-check"></i> <strong>Discord Rich Presence Nativo</strong> y Crash Analyzer</li>
+              <li><i class="fas fa-check"></i> Wallpaper animado WebP 720p de fábrica y reseteo a valores estándar</li>
+              <li><i class="fas fa-check"></i> Minimizado fluido a la bandeja del sistema (System Tray)</li>
+            </ul>
+
+            <div class="download-btn-wrapper">
+              <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader_Setup.exe" class="btn btn-primary btn-lg" download style="margin-bottom: 10px;">
+                <i class="fas fa-download"></i>
+                <span>Descargar Instalador (.exe)</span>
+              </a>
+              <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/tag/v2.3.3" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+                <i class="fab fa-github"></i> Ver Release en GitHub
+              </a>
+            </div>
+          </div>
+
+          <!-- Linux / Steam Deck Card -->
+          <div class="download-card">
+            <div class="download-icon">
+              <i class="fab fa-linux"></i>
+            </div>
+            <h3 class="download-platform">Linux &amp; Steam Deck</h3>
+            <p class="download-meta">Paquete Sandboxed Flatpak (.flatpak) • SteamOS • v2.3.3</p>
+
+            <ul class="download-features">
+              <li><i class="fas fa-check"></i> Optimizado para Steam Deck (Gaming Mode &amp; Desktop Mode)</li>
+              <li><i class="fas fa-check"></i> Compatible con SteamOS 3.0+, Arch, Ubuntu, Fedora, Debian</li>
+              <li><i class="fas fa-check"></i> <strong>Motor Unificador Maestro 0-Lag</strong> Zero-Copy instantáneo</li>
+              <li><i class="fas fa-check"></i> Detección automática en disco interno SSD y tarjetas MicroSD</li>
+              <li><i class="fas fa-check"></i> Bandeja del sistema con protocolo D-Bus StatusNotifierItem</li>
+              <li><i class="fas fa-check"></i> Aislamiento sandboxed seguro que no toca librerías del sistema</li>
+            </ul>
+
+            <div class="download-btn-wrapper">
+              <a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader.flatpak" class="btn btn-primary btn-lg" download style="margin-bottom: 10px;">
+                <i class="fas fa-download"></i>
+                <span>Descargar Flatpak (.flatpak)</span>
+              </a>
+              <div class="code-box" style="margin-top: 8px;">
+                <code>flatpak install --user DCE_Mods_Loader.flatpak</code>
+                <button class="copy-btn" data-clipboard="flatpak install --user DCE_Mods_Loader.flatpak">
+                  <i class="far fa-copy"></i> Copiar
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Changelog Section Card (Raycast Style) -->
+        <div class="changelog-card">
+          <div class="changelog-header">
+            <div>
+              <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 4px;">Novedades de la Versión v2.3.3</h3>
+              <p style="color: var(--text-dim); font-size: 0.9rem;">Publicada oficialmente el 15 de Octubre de 2026</p>
+            </div>
+            <span class="changelog-version-tag">
+              <i class="fas fa-code-commit"></i> v2.3.3 OFICIAL
+            </span>
+          </div>
+
+          <ul class="changelog-list">
+            <li>
+              <i class="fas fa-crosshairs"></i>
+              <div>
+                <strong>Crosshair Studio Pro Táctico:</strong> Visor de retícula puro y limpio, sin marcas invasivas. Cuenta con contraste dinámico sincronizado al fondo según el color elegido, animación continua Arcoíris RGB y simulador interactivo de retroceso (Click-to-Shoot).
+              </div>
+            </li>
+            <li>
+              <i class="fas fa-image"></i>
+              <div>
+                <strong>Fondo Animado 720p Integrado de Fábrica:</strong> Se incluye de forma predeterminada un fondo animado en formato WebP ultra-optimizado (6.5 MB y apenas ~2% de uso de CPU) sin caídas de rendimiento durante tus partidas.
+              </div>
+            </li>
+            <li>
+              <i class="fas fa-rotate-left"></i>
+              <div>
+                <strong>Restauración de Fábrica en 1 Clic:</strong> Nuevo botón dedicado en la pestaña de Ajustes que permite restablecer el tema, colores, fondo animado y configuraciones visuales a sus valores originales instantáneamente si alguien desea resetearlos.
+              </div>
+            </li>
+            <li>
+              <i class="fas fa-bolt"></i>
+              <div>
+                <strong>Motor Unificador Maestro 0-Lag:</strong> Fusión de todos los mods seleccionados en un único paquete maestro <code>pak01_dir.vpk</code> inyectado de alta prioridad en <code>gameinfo.txt</code>. Reduce el tiempo de montaje a menos de 0.05 segundos y ocupa 0 MB adicionales de almacenamiento.
+              </div>
+            </li>
+            <li>
+              <i class="fab fa-discord"></i>
+              <div>
+                <strong>Discord Rich Presence &amp; Crash Analyzer:</strong> Comparte en tiempo real tu mapa actual, estado de juego y tiempo transcurrido en Discord. Diagnóstico proactivo de cierres inesperados que detecta al instante qué mod VPK pudo causar un conflicto.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Requirements & Trust Grid -->
+        <div class="requirements-grid">
+          <div class="req-card">
+            <h4><i class="fab fa-windows"></i> Requisitos para Windows</h4>
+            <ul class="req-list">
+              <li><i class="fas fa-check"></i> Windows 10 u 11 de 64 bits</li>
+              <li><i class="fas fa-check"></i> Left 4 Dead 2 instalado a través de Steam</li>
+              <li><i class="fas fa-check"></i> Permisos estándar de usuario (sin necesidad de administrador)</li>
+              <li><i class="fas fa-check"></i> 80 MB de espacio libre en disco para la aplicación</li>
+            </ul>
+          </div>
+
+          <div class="req-card">
+            <h4><i class="fab fa-linux"></i> Requisitos para Linux / Steam Deck</h4>
+            <ul class="req-list">
+              <li><i class="fas fa-check"></i> SteamOS 3.0+ o cualquier distribución Linux con Flatpak</li>
+              <li><i class="fas fa-check"></i> Compatible con escritorio Wayland y X11</li>
+              <li><i class="fas fa-check"></i> Soporte de tarjeta MicroSD montada en <code>/run/media/</code></li>
+              <li><i class="fas fa-check"></i> Permite inicio en Modo Juego (Gaming Mode) como juego no de Steam</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Next Step Navigation Callout -->
+        <div class="coming-soon-banner" style="margin-top: 40px;">
+          <div class="banner-content">
+            <div class="banner-icon"><i class="fas fa-book-open" style="color: var(--flame-gold);"></i></div>
+            <div class="banner-text">
+              <h4>¿Primera vez instalando la aplicación?</h4>
+              <p>Revisa nuestra guía oficial paso a paso con capturas, atajos de teclado y solución de dudas frecuentes.</p>
+            </div>
+          </div>
+          <a href="guia.html" class="btn btn-primary" style="flex-shrink: 0;">
+            <i class="fas fa-arrow-right"></i> <span>Ver Guía de Uso</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================================
+         GLOBAL FOOTER
+         ============================================================================== -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="nav-brand">
+              <img src="icono.png" alt="DCE Logo" class="nav-logo-img" />
+              <span>DCE MODS LOADER</span>
+            </div>
+            <p class="footer-desc">
+              Suite de herramientas avanzada desarrollada con pasión por <strong>DCE STUDIOS</strong> para la comunidad de Left 4 Dead 2 y Versus competitivo.
+            </p>
+          </div>
+
+          <div class="footer-column">
+            <h4>Ecosistema</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Inicio</a></li>
+              <li><a href="caracteristicas.html">Características</a></li>
+              <li><a href="descargas.html">Descargas v2.3.3</a></li>
+              <li><a href="guia.html">Guía de Uso</a></li>
+              <li><a href="comparativa.html">Comparativa Técnica</a></li>
+              <li><a href="faq.html">Preguntas Frecuentes</a></li>
+              <li><a href="comunidad.html">Community Hub</a></li>
+              <li><a href="desarrollador.html">Sobre el Creador</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>Descargas Directas</h4>
+            <ul class="footer-links">
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader_Setup.exe"><i class="fab fa-windows"></i> Windows 10/11 (.exe)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/download/v2.3.3/DCE_Mods_Loader.flatpak"><i class="fab fa-linux"></i> Linux &amp; Steam Deck (.flatpak)</a></li>
+              <li><a href="https://github.com/DCE-21k69/DCE-MODLOADER-VERSUS.L4D2-WED-PAGINE/releases/tag/v2.3.3" target="_blank" rel="noopener noreferrer"><i class="fas fa-code-branch"></i> Release v2.3.3 (GitHub)</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h4>DCE STUDIOS</h4>
+            <ul class="footer-links">
+              <li><a href="https://steamcommunity.com/id/EducationEditionDCE/" target="_blank" rel="noopener noreferrer"><i class="fab fa-steam"></i> Steam del Creador</a></li>
+              <li><a href="https://dcegaming.studio/" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> Portal Oficial</a></li>
+              <li><a href="https://discord.gg/yCDVqdD2bk" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i> Soporte Discord</a></li>
+              <li><a href="https://www.paypal.com/ncp/payment/N76HFPRT372D2" target="_blank" rel="noopener noreferrer"><i class="fab fa-paypal"></i> Donar con PayPal</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 DCE STUDIOS. Todos los derechos reservados.</p>
+          <p>Left 4 Dead 2 y Steam son marcas registradas de Valve Corporation. Esta herramienta es un proyecto independiente para la comunidad.</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
